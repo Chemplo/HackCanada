@@ -41,7 +41,8 @@
 }
 
 .login-btn:hover {
-    color: #C9BBDA;
+    color: #65558F;
+    transition: color 0.3s ease-in-out;
 }
 
 .dropdown-btn {
@@ -58,7 +59,8 @@
 }
 
 .dropdown-btn:hover {
-    color: #C9BBDA;
+    color: #65558F;
+    transition: color 0.3s ease-in-out;
 }
 
 .dropdown-menu {
@@ -69,6 +71,7 @@
     display: flex;
     flex-direction: column;
     min-width: 400px;
+    z-index: 1000;
 }
 
 .question, .about, .profile, .results, .dashboard {
@@ -80,7 +83,8 @@
 }
 
 .question:hover, .about:hover, .profile:hover, .results:hover, .dashboard:hover {
-    color: #d9caec;
+    color: #65558F;
+    transition: color 0.3s ease-in-out;
 }
 
 .divider {
