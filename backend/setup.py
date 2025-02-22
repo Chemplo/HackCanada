@@ -53,6 +53,12 @@ class UserAns(db.Model):
 	q8 = db.Column(db.Integer)
 	q9 = db.Column(db.Integer)
 	q10 = db.Column(db.Integer)
+	q11 = db.Column(db.Integer)
+	q12 = db.Column(db.Integer)
+	q13 = db.Column(db.Integer)
+	q14 = db.Column(db.Integer)
+	q15 = db.Column(db.Integer)
+	q16 = db.Column(db.Integer)
 
 class Results(db.Model):
 	key = db.Column(db.Integer, primary_key=True)

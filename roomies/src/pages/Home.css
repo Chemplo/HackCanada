@@ -15,6 +15,7 @@
     background-color: #C9BBDA;
     border-radius: 10px;
     margin: 2.5% auto;
+    z-index: 1;
 }
 
 .second_row {
@@ -52,18 +53,25 @@
     position: absolute;
     color: #FFFF;
     font-family: "Josefin Sans", sans-serif;
-    font-size: 80px;
-    top: 5%;
+    font-size: 40px;
+    top: 4%;
     left: 4%;
     font-weight: 400;
+    text-decoration: none;
+}
+
+.dbquestionnaire:hover, .dbprofile:hover, .dbresult:hover, .dbabout:hover{
+    color: #65558F;
+    transition: color 0.3s ease-in-out;
 }
 
 .dbprofile, .dbresult, .dbabout{
     position: absolute;
     color: #FFFF;
     font-family: "Josefin Sans", sans-serif;
-    font-size: 55px;
+    font-size: 40px;
     font-weight: 400;
+    text-decoration: none;
 }
 
 .dbresult{
