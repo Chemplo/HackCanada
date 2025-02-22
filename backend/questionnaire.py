@@ -68,8 +68,8 @@ def result():
             if curr_user_ans.id != user.id:
                 score = calculate_weighted_score(curr_user_ans, 
                                                  user, WEIGHTS)
-            if score >= THRESHOLD:
-                curr_compatible += f"{user.id};{score},"  
+                if score >= THRESHOLD:
+                    curr_compatible += f"{user.id};{score},"  
 
         new_res = Results(id = current_user.id, compatible = curr_compatible)
         db.session.add(new_res)
@@ -93,7 +93,7 @@ def calculate_weighted_score(ans1, ans2, weights):
             answer1 = getattr(ans1, question)
             answer2 = getattr(ans2, question)
 
-            score += weights[i-1] * (1 if answer1 == answer2 else 0)
+            score += weights[i-FIRST_WEIGHTED_QUESTION] * (1 if answer1 == answer2 else 0)
 
         if score == 0:
             return 0
