@@ -9,6 +9,7 @@
 }
 
 .questionnaire_box {
+    position: relative;
     width: 100%;
     height: 45%;
     background-color: #C9BBDA;
@@ -23,23 +24,56 @@
     height: 40%; /* Ensures boxes fit properly */
 }
 
-.profile_box, .result_box {
+.result_box, .profile_box {
     width: 34.5%; /* Almost half of the row */
     height: 100%; /* Use full height */
     border-radius: 10px;
 }
 
-.profile_box {
+.result_box {
+    position: relative;
     background-color: #C9BBDA;
 }
 
-.result_box {
+.profile_box {
+    position: relative;
     background-color: #C9BBDA;
 }
 
 .about_box {
+    position: relative;
     width: 25%;
     height: 100%;
     border-radius: 10px;
     background-color: #C9BBDA;
+}
+
+.dbquestionnaire{
+    position: absolute;
+    color: #FFFF;
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 80px;
+    top: 5%;
+    left: 4%;
+    font-weight: 400;
+}
+
+.dbprofile, .dbresult, .dbabout{
+    position: absolute;
+    color: #FFFF;
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 55px;
+    font-weight: 400;
+}
+
+.dbresult{
+    left: 8%;
+}
+
+.dbprofile{
+    left: 8%;
+}
+
+.dbabout{
+    left: 12%;
 }
