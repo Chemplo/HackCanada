@@ -48,6 +48,9 @@ function Signup() {
                 <input className="password" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 <button className="submit" type="submit">Sign Up</button>
             </form>
+            <div className="extras">
+                <Link className="existing" to="/login">Existing User?</Link>
+            </div>
         </div>
         </>
     );

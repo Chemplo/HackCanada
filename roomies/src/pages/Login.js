@@ -36,12 +36,18 @@ function Login() {
             </div>
         </div>
         <div className="right">
-        <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <input type="text" placeholder="Email" value={user} onChange={(e) => setUser(e.target.value)} required />
-                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                <button type="submit">Login</button>
+            <Link className="right-text" to="/">roomies</Link>
+            <form className="form" onSubmit={handleSubmit}>
+                <p className="user-text">Username/Email</p>
+                <input className="user" type="text" placeholder="John Doe" value={user} onChange={(e) => setUser(e.target.value)} required />
+                <p className="password-text">Password</p>
+                <input className="password" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                <button className="submit" type="submit">Login</button>
             </form>
+            <div className="extra">
+                <Link className="forgot" to="/womp">Forgot Password?</Link>
+                <Link className="signup" to="/signup">New user?</Link>
+            </div>
         </div>
         </>
     );
