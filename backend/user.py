@@ -127,5 +127,26 @@ def get_current_user():
         "email": current_user.email
     }), 200
 
+@app.route('/inputted_user', methods=['GET'])
+def get_inputted_user():
+    data = request.get_json()
+    inputted_user = User.query.filter_by(username = data['id']).first()
+
+    return jsonify({
+        "id": inputted_user.id,
+        "username": inputted_user.username,
+        "password": inputted_user.password,
+        "fname": inputted_user.fname,
+        "lname": inputted_user.lname,
+        "pronouns": inputted_user.pronouns,
+        "gender": inputted_user.gender,
+        "age": inputted_user.age,
+        "uni": inputted_user.uni,
+        "abt_me": inputted_user.abt_me,
+        "ig": inputted_user.ig,
+        "disc": inputted_user.disc,
+        "email": inputted_user.email
+    }), 200
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
