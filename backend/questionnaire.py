@@ -1,5 +1,6 @@
 from flask import request, jsonify
-from setup import app, db, UserAns  # Import necessary objects
+from flask_login import current_user
+from setup import app, db, User, UserAns  # Import necessary objects
 from user import get_current_user
 
 # Route to receive data from React and insert into DB
@@ -19,4 +20,49 @@ def submit():
 
         db.session.commit()
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error submitting questionnaire": str(e)}), 500
+    
+
+def result():
+    try:
+        WEIGHTS = [1, 1, 3, 3, 2, 2, 2, 2, 2, 3, 2]
+        THRESHOLD = 80
+
+        curr_user_ans = UserAns.query.filter_by(id=current_user.id).first()
+
+        compatible = "" 
+        users = UserAns.query.all()
+
+        for user in users:
+            if curr_user_ans.id != user.id:
+                score = calculate_weighted_score(curr_user_ans, 
+                                                 user, WEIGHTS)
+            if score >= THRESHOLD:
+                compatible += f"{user.id};{score},"  
+
+    except Exception as e:
+        return jsonify({"error generating resuts": str(e)}), 500
+    
+def calculate_weighted_score(ans1, ans2, weights):
+    try:
+        TOTAL_WEIGHT = 26
+        FIRST_WEIGHTED_QUESTION = 5
+        LAST_WEIGHTED_QUESTION = 16
+
+        score = 0
+
+        for i in range(FIRST_WEIGHTED_QUESTION, LAST_WEIGHTED_QUESTION + 1):
+            question = f'q{i}'
+            answer1 = getattr(ans1, question)
+            answer2 = getattr(ans2, question)
+
+            score += weights[i-1] * (1 if answer1 == answer2 else 0)
+
+        if score == 0:
+            return 0
+        else:
+            return (score / TOTAL_WEIGHT) * 100
+
+    except Exception as e:
+        return jsonify({"error calculating score": str(e)}), 500
+    
