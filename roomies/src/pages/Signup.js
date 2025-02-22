@@ -1,7 +1,7 @@
 import './Signup.css';
 import { useAuth } from "../components/AuthContext.js";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Signup() {
 
@@ -38,12 +38,15 @@ function Signup() {
             </div>
         </div>
         <div className="right">
-            <h1 className="right-text">roomies</h1>
+            <Link className="right-text" to="/">roomies</Link>
             <form className="form" onSubmit={handleSignup}>
-                <input className="email" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                <input className="username" type="text" name="username" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+                <p className="email-text">Email</p>
+                <input className="email" type="email" placeholder="example@domain" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <p className="username-text">Username</p>
+                <input className="username" type="text" name="username" placeholder="JohnDoe" value={username} onChange={(e) => setUsername(e.target.value)} required />
+                <p className="password-text">Password</p>
                 <input className="password" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                <button type="submit">Sign Up</button>
+                <button className="submit" type="submit">Sign Up</button>
             </form>
         </div>
         </>
