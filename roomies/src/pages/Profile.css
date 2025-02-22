@@ -1,0 +1,59 @@
+.about-me-page {
+    display: flex;
+    margin: 20px;
+}
+
+.sidebar {
+    width: 20%;
+    text-align: center;
+}
+
+.profile-pic {
+    max-width: 128px;
+	min-height: 128px;
+    background-color: #E8DEF8;
+    border-radius: 50%;
+}
+
+.sidebar h2 {
+    font-size: 40px;
+    color: #65558F;
+	text-align: left;
+}
+
+.sidebar p {
+    color: gray;
+	font-size: 32px;
+}
+
+.sidebar h3 {
+    font-size: 40px;
+    color: #65558F;
+    font-weight: bold;
+}
+
+.social-links {
+    list-style: none;
+    padding: 0;
+}
+
+.social-links li {
+    color: #5D4E8F;
+    margin: 5px 0;
+}
+
+.about-me-box {
+    width: 80%; /* Adjust width */
+    background-color: #C9BBDA;
+    padding: 20px;
+    border-radius: 10px; /* Rounded corners */
+    font-weight: bold;
+    font-size: 20px;
+    color: white; /* Light text */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+.about-me {
+	font-size: 64px;
+    color: #ffffff;
+}
