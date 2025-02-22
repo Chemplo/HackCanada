@@ -85,3 +85,37 @@
 .dbabout{
     left: 12%;
 }
+
+.progress-container {
+    position: absolute;
+    width: 92%;  /* Full width */
+    height: 15px; /* Adjust height */
+    background-color: #FFF; /* Light grey background */
+    border-radius: 15px;
+    overflow: hidden; /* Keeps bar within rounded corners */
+    border: 2px solid #ccc;
+    left: 4%;
+    bottom: 33%;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #65558F; 
+    text-align: center;
+    line-height: 30px; /* Aligns text */
+    color: white;
+    font-weight: bold;
+    border-radius: 15px 0 0 15px; /* Round left edge */
+    transition: width 0.5s ease-in-out; /* Smooth animation */
+}
+
+.progress_text {
+    position: absolute;
+    color: #FFFF;
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 28px;
+    font-weight: 400;
+    text-decoration: none;
+    left: 5%;
+    bottom: 18%;
+}
