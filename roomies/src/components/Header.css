@@ -5,6 +5,7 @@
     width: 100%;
     background-color: #B7A2D2;
     justify-content: space-between;
+    align-items: center;
 }
 
 .logo {
@@ -17,6 +18,30 @@
     font-family: "Josefin Sans", sans-serif;
     color: #FFFFFF;
     text-decoration: none;
+}
+
+.header-left {
+    position: relative;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+
+.login-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-size: 24px;
+    font-family: "Josefin Sans", sans-serif;
+    font-weight: 400;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.login-btn:hover {
+    color: #C9BBDA;
 }
 
 .dropdown-btn {
@@ -33,7 +58,7 @@
 }
 
 .dropdown-btn:hover {
-    color: #d9caec;
+    color: #C9BBDA;
 }
 
 .dropdown-menu {
