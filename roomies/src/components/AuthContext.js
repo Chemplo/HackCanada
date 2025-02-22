@@ -26,24 +26,27 @@ export function AuthProvider({ children }) {
 
     const addUser = async (userData) => {
         try {
-            const response = await fetch("http://localhost:5000/signup", {
+            const response = await fetch("http://127.0.0.1:5000/signup", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: userData,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(userData),
             });
     
             const data = await response.json();
-    
+            
             if (response.ok) {
+                console.log("User signed up successfully:", data);
+                if (data.token) {
                 localStorage.setItem("token", data.token);
                 setUser(data.user);
-                return data; // ✅ Return response to handle in `Signup.js`
+            }
             } else {
-                throw new Error(data.error || "Signup failed");
+                console.error("Signup error:", data.error);
             }
         } catch (error) {
             console.error("Error:", error);
-            return null; // Return null on failure
         }
     };
 
