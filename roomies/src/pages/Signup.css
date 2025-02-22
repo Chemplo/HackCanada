@@ -1,0 +1,55 @@
+.left {
+    display: flex;
+    position: absolute;
+    width: 60%;
+    height: 100%;
+    background: #C9BBDA;
+}
+
+.left-text {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 10%;
+}
+
+.welcome, .new, .roomies {
+    color: #65558F;
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 117px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: 400;
+}
+
+.right {
+    display: flex;
+    position: absolute;
+    right: 0;
+    width: 40%;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.right-text {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 96px;
+    color: #65558F;
+    font-weight: 400;
+}
+
+.form {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    width: 60%;
+    justify-content: center;
+    align-items: center;
+}
