@@ -27,7 +27,7 @@ class University(db.Model):
     
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(100), unique = True)
+    username = db.Column(db.String(100))
     password = db.Column(db.String(100))
     fname = db.Column(db.String(100))
     lname = db.Column(db.String(100))
@@ -38,7 +38,7 @@ class User(db.Model, UserMixin):
     abt_me = db.Column(db.String(255))
     ig = db.Column(db.String(100))
     disc = db.Column(db.String(100))
-    email = db.Column(db.String(100))
+    email = db.Column(db.String(100), unique = True)
     
 class UserAns(db.Model):
 	key = db.Column(db.Integer, primary_key=True)
