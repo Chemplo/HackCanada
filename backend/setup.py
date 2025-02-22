@@ -1,15 +1,20 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 
 app = Flask(__name__)
-CORS(app)  # Allow cross-origin requests
-
-# Database configuration (SQLite)
+app.config['SECRET_KEY'] = 'your_secret_key'  # Change this to a secure random value
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///roomies.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+CORS(app)
+
+# Flask-Login Setup
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'  # Redirects to login if unauthorized access occurs
 
 # Database Model
 class Gender(db.Model):
@@ -20,7 +25,7 @@ class University(db.Model):
     key = db.Column(db.Integer, primary_key=True)
     uni = db.Column(db.String(100), unique = True)
     
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(100), unique = True)
     password = db.Column(db.String(100))
