@@ -102,7 +102,6 @@
     height: 100%;
     background-color: #65558F; 
     text-align: center;
-    line-height: 30px; /* Aligns text */
     color: white;
     font-weight: bold;
     border-radius: 15px 0 0 15px; /* Round left edge */

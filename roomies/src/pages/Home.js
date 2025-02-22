@@ -1,7 +1,7 @@
 import './Home.css';
 import { Link } from "react-router-dom";
 
-const progress = 80
+const progress = 20
 
 function Home() {
     return (
