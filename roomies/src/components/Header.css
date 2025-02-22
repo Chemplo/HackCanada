@@ -6,6 +6,7 @@
     background-color: #B7A2D2;
     justify-content: space-between;
     align-items: center;
+    z-index: 1000;
 }
 
 .logo {
@@ -55,7 +56,8 @@
     color: white;
     font-size: 48px;
     cursor: pointer;
-    margin: 3rem;
+    margin-right: 3rem;
+    margin-left: 1rem;
 }
 
 .dropdown-btn:hover {
@@ -90,4 +92,38 @@
 .divider {
     width: 100%;
     border-bottom: 2px solid white;
+}
+
+.profile-container {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.profile-icon {
+    display: flex;
+    position: relative;
+    height: 64px;
+    width: 64px;
+    object-fit: cover;
+    margin: 1rem;
+}
+
+.logout-btn {
+    display: flex;
+    position: relative;
+    font-size: 24px;
+    font-family: "Josefin Sans", sans-serif;
+    font-weight: 400;
+    color: #FF0000;
+    background-color: #FFFFFF;
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 15px;
+    margin: 1rem;
+}
+
+.logout-btn:hover {
+    text-decoration: underline;
 }
