@@ -11,7 +11,7 @@ def submit():
         data = request.get_json()  # Receive JSON data from React
 
         user = get_current_user()
-
+        
         answer = UserAns(id=user['id'], q1=data['q1'], q2=data['q2'], 
                          q3=data['q3'], q4=data['q4'], q5=data['q5'], 
                          q6=data['q6'], q7=data['q7'], q8=data['q8'], 
