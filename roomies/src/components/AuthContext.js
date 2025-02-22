@@ -9,13 +9,7 @@ export function AuthProvider({ children }) {
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
-            try {
-                const decodedUser = jwtDecode(token);
-                setUser(decodedUser); // Set user from token
-            } catch (error) {
-                console.error("Invalid token", error);
-                logout();
-            }
+            setUser(jwtDecode(token));
         }
     }, []);
 
@@ -36,11 +30,14 @@ export function AuthProvider({ children }) {
                 console.log("User logged in successfully:", data);
                 localStorage.setItem("token", data.token);
                 setUser(jwtDecode(data.token));
+                return true;
             } else {
                 console.error("Login error:", data.error);
+                return false;
             }
         } catch (error) {
             console.error("Error:", error);
+            return false;
         }
     };
 
@@ -60,11 +57,14 @@ export function AuthProvider({ children }) {
                 console.log("User signed up successfully:", data);
                 localStorage.setItem("token", data.token);
                 setUser(jwtDecode(data.token));
+                return true;
             } else {
                 console.error("Signup error:", data.error);
+                return false;
             }
         } catch (error) {
             console.error("Error:", error);
+            return false;
         }
     };
 

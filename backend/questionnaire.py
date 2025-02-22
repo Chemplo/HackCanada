@@ -1,10 +1,11 @@
 from flask import request, jsonify
-from flask_login import current_user
-from setup import app, db, User, UserAns 
-from user import get_current_user   # Import necessary objects
+from setup import app, db, User, UserAns, Results  # Import necessary objects
+from user import get_current_user
+from flask_login import login_required, current_user
 
 # Route to receive data from React and insert into DB
 @app.route('/submit', methods=['POST'])
+@login_required
 def submit():
     try:
         data = request.get_json()  # Receive JSON data from React
@@ -23,7 +24,8 @@ def submit():
     except Exception as e:
         return jsonify({"error submitting questionnaire": str(e)}), 500
     
-
+# Route to receive data from React and insert into DB
+@app.route('/result', methods=['POST'])
 def result():
     try:
         WEIGHTS = [1, 1, 3, 3, 2, 2, 2, 2, 2, 3, 2]
@@ -31,7 +33,7 @@ def result():
 
         curr_user_ans = UserAns.query.filter_by(id=current_user.id).first()
 
-        compatible = "" 
+        curr_compatible = "" 
         users = UserAns.query.all()
 
         for user in users:
@@ -39,8 +41,14 @@ def result():
                 score = calculate_weighted_score(curr_user_ans, 
                                                  user, WEIGHTS)
             if score >= THRESHOLD:
-                compatible += f"{user.id};{score},"  
+                curr_compatible += f"{user.id};{score},"  
 
+        new_res = Results(id = current_user.id, compatible = curr_compatible)
+        db.session.add(new_res)
+        
+        db.session.commit()
+
+        return jsonify({"message": "User results inserted successfully!"}), 200
     except Exception as e:
         return jsonify({"error generating resuts": str(e)}), 500
     
@@ -66,4 +74,51 @@ def calculate_weighted_score(ans1, ans2, weights):
 
     except Exception as e:
         return jsonify({"error calculating score": str(e)}), 500
-    
+
+@app.route('/curr_user_ans', methods=['POST'])
+@login_required  # Ensures only logged-in users can access this
+def get_curr_user_ans():
+    try:
+        existing_user = UserAns.query.filter_by(id = current_user.id).first()
+        if not existing_user:
+            raise Exception("Sorry, this user has not completed the questionnaire")
+        
+        curr_ans = UserAns.query.filter_by(id = current_user.id).first()
+        return jsonify({
+            "id": curr_ans.id,
+            "q1": curr_ans.q1,
+            "q2": curr_ans.q2,
+            "q3": curr_ans.q3,
+            "q4": curr_ans.q4,
+            "q5": curr_ans.q5,
+            "q6": curr_ans.q6,
+            "q7": curr_ans.q7,
+            "q8": curr_ans.q8,
+            "q9": curr_ans.q9,
+            "q10": curr_ans.q10,
+            "q11": curr_ans.q11,
+            "q12": curr_ans.q12,
+            "q13": curr_ans.q13,
+            "q14": curr_ans.q14,
+            "q15": curr_ans.q15,
+            "q16": curr_ans.q16
+        }), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/curr_results', methods=['POST'])
+@login_required  # Ensures only logged-in users can access this
+def get_curr_results():
+    try:
+        existing_user = Results.query.filter_by(id = current_user.id).first()
+        if not existing_user:
+            raise Exception("Sorry, this user has no computed results")
+        
+        curr_res = Results.query.filter_by(id = current_user.id).first()
+        return jsonify({
+            "id": curr_res.id,
+            "compatible": curr_res.compatible,
+            "pinned": curr_res.pinned
+        }), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
