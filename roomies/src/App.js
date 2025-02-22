@@ -7,10 +7,11 @@ import About from "./pages/About.js";
 import Header from "./components/Header.js";
 import Login from "./pages/Login.js";
 import Signup from "./pages/Signup.js";
+import Womp from "./pages/Womp.js"
 
 function AppContent() {
   const location = useLocation(); // Get current route
-  const hideHeaderRoutes = ["/login", "/signup"]; // Routes where header should be hidden
+  const hideHeaderRoutes = ["/login", "/signup", "/womp"]; // Routes where header should be hidden
 
   return (
     <>
@@ -25,6 +26,7 @@ function AppContent() {
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/womp" element={<Womp />} />
       </Routes>
     </>
   );

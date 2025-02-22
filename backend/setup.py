@@ -27,7 +27,7 @@ class University(db.Model):
     
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(100))
+    username = db.Column(db.String(100), unique = True)
     password = db.Column(db.String(100))
     fname = db.Column(db.String(100))
     lname = db.Column(db.String(100))
@@ -57,7 +57,7 @@ class UserAns(db.Model):
 class Results(db.Model):
 	key = db.Column(db.Integer, primary_key=True)
 	id = db.Column(db.Integer, db.ForeignKey("user.id"))
-	threshold = db.Column(db.String(255))
+	compatible = db.Column(db.String(255))
 	pinned = db.Column(db.String(255))
 
 # Create database tables
@@ -71,10 +71,6 @@ with app.app_context():
 		if not existing_gender:
 			new_gender = Gender(gender = x)
 			db.session.add(new_gender)
-	stored_genders = Gender.query.all()
-	print("Stored Genders in Database:")
-	for g in stored_genders:
-		print(g.gender)
 
 	# adds university options
 	universities = ["Waterloo", "Laurier", "UofT", "TMU", "Western", "York", "Queens", "UBC", "McGill", "McMaster", "Guelph", "Calgary", "OCAD"]
@@ -87,4 +83,4 @@ with app.app_context():
 	db.session.commit()
 
 if __name__ == '__main__':
-    app.run(debug=False, port=5000)
+    app.run(debug=True, port=5000)
