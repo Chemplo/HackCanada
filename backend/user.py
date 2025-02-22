@@ -17,10 +17,11 @@ def add_user():
     try:
         #print("Incoming request received")  # Debugging
         data = request.get_json()
-        #print("Received Data:", data)  # This will show if JSON is valid
+        print("Received Data:", data)  # This will show if JSON is valid
 
         existing_user = User.query.filter_by(username = data['username']).first()
         if existing_user:
+            print("username repeat")
             raise Exception("Sorry, this username is already in use")
 
         try:
@@ -30,6 +31,7 @@ def add_user():
         
         existing_email = User.query.filter_by(email = data['email']).first()
         if existing_email:
+            print("email repeat")
             raise Exception("Sorry, this email is already in use")
 
         #new_user = User(username=data['username'], password=data['password'], fname=data['fname'], lname=data['lname'], pronouns=data['pronouns'], gender=data['gender'], age=data['age'], uni=data['uni'], abt_me=data['abt_me'], ig=data['ig'], disc=data['disc'], email=data['email'])
@@ -38,20 +40,22 @@ def add_user():
         
         db.session.commit()
 
+        print("inserted into db")
         token_payload = {
-            "id": existing_user.id,
-            "username": existing_user.username,
+            "id": new_user.id,
+            "username": new_user.username,
             "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=12) # Makes the token expire in 12 hours
         }
+        print("token payload")
         token = jwt.encode(token_payload, SECRET_KEY, algorithm="HS256")
-
+        print("token made")
         return jsonify({
             "message": "User logged in successfully!",
             "token": token,
             "user": {
-                "id": existing_user.id,
-                "username": existing_user.username,
-                "email": existing_user.email
+                "id": new_user.id,
+                "username": new_user.username,
+                "email": new_user.email
             }
         }), 200 # This token gets returned to frontend
     except Exception as e:
