@@ -6,14 +6,24 @@ import { useNavigate, Link } from "react-router-dom";
 function Login() {
 
     const { login } = useAuth();
-    const [email, setEmail] = useState("");
+    const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        await login(email, password);
-        navigate("/"); // Redirect to home on success
+        const userData = { user, password };
+
+        try {
+            const response = await login(userData);
+            if (response) {
+                navigate("/"); // ✅ Redirect to home after signup
+            } else {
+                setError("Login failed. Please try again.");
+            }
+        } catch (err) {
+            setError("Login failed. Please try again.");
+        }
     };
 
     return (
@@ -28,7 +38,7 @@ function Login() {
         <div className="right">
         <h2>Login</h2>
             <form onSubmit={handleSubmit}>
-                <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <input type="text" placeholder="Email" value={user} onChange={(e) => setUser(e.target.value)} required />
                 <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 <button type="submit">Login</button>
             </form>

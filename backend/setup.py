@@ -27,7 +27,7 @@ class University(db.Model):
     
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(100))
+    username = db.Column(db.String(100), unique = True)
     password = db.Column(db.String(100))
     fname = db.Column(db.String(100))
     lname = db.Column(db.String(100))
@@ -57,7 +57,7 @@ class UserAns(db.Model):
 class Results(db.Model):
 	key = db.Column(db.Integer, primary_key=True)
 	id = db.Column(db.Integer, db.ForeignKey("user.id"))
-	threshold = db.Column(db.String(255))
+	compatible = db.Column(db.String(255))
 	pinned = db.Column(db.String(255))
 
 # Create database tables

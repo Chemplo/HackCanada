@@ -12,17 +12,21 @@ def load_user(user_id):
 @app.route('/signup', methods=['POST'])
 def add_user():
     try:
-        print("Incoming request received")  # Debugging
+        #print("Incoming request received")  # Debugging
         data = request.get_json()
-        print("Received Data:", data)  # This will show if JSON is valid
+        #print("Received Data:", data)  # This will show if JSON is valid
+
+        existing_user = User.query.filter_by(username = data['username']).first()
+        if existing_user:
+            raise Exception("Sorry, this username is already in use")
 
         try:
             validate_email(data['email'])
         except EmailNotValidError as e:
             return jsonify({"error": f"Invalid email: {str(e)}"}), 400
         
-        existing_user = User.query.filter_by(email = data['email']).first()
-        if existing_user:
+        existing_email = User.query.filter_by(email = data['email']).first()
+        if existing_email:
             raise Exception("Sorry, this email is already in use")
 
         #new_user = User(username=data['username'], password=data['password'], fname=data['fname'], lname=data['lname'], pronouns=data['pronouns'], gender=data['gender'], age=data['age'], uni=data['uni'], abt_me=data['abt_me'], ig=data['ig'], disc=data['disc'], email=data['email'])
@@ -30,11 +34,6 @@ def add_user():
         db.session.add(new_user)
         
         db.session.commit()
-        
-        stored_user = User.query.all()
-        print("Stored user in Database:")
-        for u in stored_user:
-            print(u.email)
 
         return jsonify({"message": "User added successfully!"}), 201
     except Exception as e:
@@ -43,17 +42,25 @@ def add_user():
 @app.route('/login', methods=['POST'])
 def login():
     try:
-        data = request.get_json()  # Receive JSON data from React
+        #print("Incoming request received")  # Debugging
+        data = request.get_json()
+        #print("Received Data:", data)  # This will show if JSON is valid
 
-        existing_user = User.query.filter_by(email = data['email']).first()
-        if existing_user:
-            if existing_user.password == data['password']:
-                login_user(existing_user)
-                return jsonify({"message": "User logged in successfully!"}), 201
-            else:
-                raise Exception("Incorrect Password")
+        if data['user'].find('@') == -1:    # username
+            existing_user = User.query.filter_by(username = data['user']).first()
+            if not existing_user:
+                raise Exception("Sorry, this username isn't attached to an account")
+        else:   # email
+            existing_user = User.query.filter_by(email = data['user']).first()
+            if not existing_user:
+                raise Exception("Sorry, this email isn't attached to an account")
+        
+        if existing_user.password == data['password']:
+            login_user(existing_user)
+            return jsonify({"message": "User logged in successfully!"}), 201
         else:
-            raise Exception("Sorry, this email isn't attached to an account")
+            raise Exception("Incorrect Password")
+            
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
@@ -81,20 +88,6 @@ def get_current_user():
         "disc": current_user.disc,
         "email": current_user.email
     }), 200
-
-
-@app.route('/get_users', methods=['GET'])
-def get_users():
-    users = User.query.all()  # Fetch all users
-    user_list = [
-        {
-            "email": u.email,
-            "password": u.password
-        }
-        for u in users
-    ]
-    print(user_list)
-    return jsonify(user_list)  # Return the data as JSON
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
