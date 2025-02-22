@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from flask_login import current_user
-from setup import app, db, User, UserAns  # Import necessary objects
-from user import get_current_user
+from setup import app, db, User, UserAns 
+from user import get_current_user   # Import necessary objects
 
 # Route to receive data from React and insert into DB
 @app.route('/submit', methods=['POST'])
@@ -10,6 +10,7 @@ def submit():
         data = request.get_json()  # Receive JSON data from React
 
         user = get_current_user()
+
         answer = UserAns(id=user['id'], q1=data['q1'], q2=data['q2'], 
                          q3=data['q3'], q4=data['q4'], q5=data['q5'], 
                          q6=data['q6'], q7=data['q7'], q8=data['q8'], 
