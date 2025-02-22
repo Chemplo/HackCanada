@@ -1,29 +1,59 @@
 body {
-	color: #65558F;
+    color: #65558F;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.results-page {
+    text-align: center;
+    padding: 20px;
 }
 
 table {
-    width: 100%;
+    width: 80%;
+    margin: 20px auto;
     border-collapse: collapse; /* Removes spacing between cells */
 }
 
 th, td {
-    border: 1px solid rgb(255, 255, 255);
-    padding: 8px;
+    border: 1px solid white;
+    padding: 12px; /* Increased padding for better spacing */
     text-align: center;
+    font-size: 18px;
 }
 
 /* Table Header */
 th {
-    background-color: #C9BBDA; /* Green header */
+    background-color: #B7A2D2; /* Purple header */
     color: white;
+    font-size: 20px;
 }
 
 /* Table Rows */
 tr:nth-child(even) {
-    background-color: #B7A2D2; /* Light gray for even rows */
+    background-color: #E8DEF8; /* Light purple for even rows */
 }
 
 tr:hover {
-    background-color: #E8DEF8; /* Highlight row on hover */
+    background-color: #C9BBDA; /* Highlight row on hover */
+}
+
+/* Match Entries - Add Extra Space */
+tr {
+    height: 50px; /* Ensures visible separation between rows */
+}
+
+/* Text Styling */
+.result-text {
+    position: relative;
+    text-align: left;
+    color: #65558F;
+    font-family: "Josefin Sans", sans-serif !important;
+    text-decoration: none !important;
+    margin: 1% 13%;
+}
+
+.result-headers {
+    color: white;
+    font-family: "Josefin Sans", sans-serif !important;
+    font-weight: bold;
 }

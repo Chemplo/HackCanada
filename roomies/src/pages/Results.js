@@ -1,71 +1,90 @@
-import './Results.css';
+import React, { useState, useEffect } from "react";
+import "./Results.css";
+
+const name = "rinuah";
 
 function Results() {
-    function getUserInfo(user, score, name, gender, contact, matched_score) {
-        fetch('/inputted_user', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: user }) // Send data to Flask
-        })
-        .then(response => response.json()) // Parse JSON response
-        .then(user => {
-            console.log(user); // Handle response (e.g., update UI)
-            name.innerHTML = user.fname + ' ' + user.lname;
-            gender.innerHTML = user.gender;
-            contact.innerHTML = user.email;
-            matched_score.innerHTML = score;
-        })
-        .catch(error => console.error('Error:', error));
-    }
+    // ==========================
+    // TEST CODE (ACTIVE)
+    // ==========================
+    const [matches, setMatches] = useState([
+        {
+            name: "Alice Johnson",
+            gender: "Female",
+            contact: "alice@email.com",
+            score: 85,
+        },
+        {
+            name: "Bob Smith",
+            gender: "Male",
+            contact: "bob@email.com",
+            score: 92,
+        },
+        {
+            name: "Charlie Davis",
+            gender: "Non-binary",
+            contact: "charlie@email.com",
+            score: 78,
+        },
+    ]);
 
-    function getMatches() {
-        fetch('/curr_results', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json()) // Parse JSON response
-        .then(str => {
-            let matches = str.split(",");
-            matches.forEach(function(pair) {
-                let paired = pair.split(";");
-                let user = paired[0];
-                let score = paired[1];
-
-                let table = document.getElementByID("match-table");
-                let row =  table.insertRow(-1); // -1 means add to the end
-
-                let name = row.insertCell(0); // First column
-                let gender = row.insertCell(1); 
-                let contact = row.insertCell(2); 
-                let matched_score = row.insertCell(3); 
-                getUserInfo(user, score, name, gender, contact, matched_score);
-            });
-
-        })
-        .catch(error => console.error('Error:', error));
-    }
+    /* ==========================
+     ACTUAL CODE (COMMENTED OUT)
+  ========================== */
+    /*
+  useEffect(() => {
+    fetch("/curr_results", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const formattedMatches = data.map((match) => ({
+          name: match.fname + " " + match.lname,
+          gender: match.gender,
+          contact: match.email,
+          score: match.score,
+        }));
+        setMatches(formattedMatches);
+      })
+      .catch((error) => console.error("Error fetching matches:", error));
+  }, []);
+  */
 
     return (
-    <div>
-        <h1>Results Page!</h1>
-        <div className = "results-page">
-            <h2>Welcome back, [name]</h2>
-            <p>Please look through the matches we have for you :D Feel free to reach out the anyone interesting!</p>
-            <table id = "match-table">
-                <tr>
-                    <th>Match Name</th>
-                    <th>Gender</th>
-                    <th>Contact Information</th>
-                    <th>Match Score</th>
-                </tr>
-                {getMatches()}
-            </table>
+        <div>
+            <div className="results-page">
+                <h1 className="result-text">Welcome back, {name}</h1>
+                <p className="result-text">
+                    Please look through the matches we have for you :D Feel free
+                    to reach out to anyone interesting!
+                </p>
+
+                <table id="match-table">
+                    <thead>
+                        <tr>
+                            <th className="result-headers">Match Name</th>
+                            <th className="result-headers">Gender</th>
+                            <th className="result-headers">
+                                Contact Information
+                            </th>
+                            <th className="result-headers">Match Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {matches.map((match, index) => (
+                            <tr key={index}>
+                                <td>{match.name}</td>
+                                <td>{match.gender}</td>
+                                <td>{match.contact}</td>
+                                <td>{match.score}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>);
+    );
 }
 
 export default Results;
