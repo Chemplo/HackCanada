@@ -1,22 +1,39 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Questionnaire from "./pages/Questionnaire";
-import Results from "./pages/Results";
-import Profile from "./pages/Profile";
-import About from "./pages/About";
-import Header from "./components/Header";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import Home from "./pages/Home.js";
+import Questionnaire from "./pages/Questionnaire.js";
+import Results from "./pages/Results.js";
+import Profile from "./pages/Profile.js";
+import About from "./pages/About.js";
+import Header from "./components/Header.js";
+import Login from "./pages/Login.js";
+import Signup from "./pages/Signup.js";
 
-function App() {
+function AppContent() {
+  const location = useLocation(); // Get current route
+  const hideHeaderRoutes = ["/login", "/signup"]; // Routes where header should be hidden
+
   return (
-    <Router>
-      <Header />
+    <>
+      {/* Show Header only if the current path is NOT in hideHeaderRoutes */}
+      {!hideHeaderRoutes.includes(location.pathname) && <Header />}
+      
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/questionnaire" element={<Questionnaire />} />
         <Route path="/results" element={<Results />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/about" element={<About />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }

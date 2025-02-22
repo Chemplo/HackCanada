@@ -10,6 +10,10 @@ function Header() {
         <div className="header">
             <Link className="logo" to="/">roomies</Link>
 
+            <Link className="login-btn" to="/login">
+                Login/Signup
+            </Link>
+
             <button className="dropdown-btn" onClick={() => setIsOpen(!isOpen)}>
                 ☰
             </button>
