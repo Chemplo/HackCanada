@@ -17,7 +17,7 @@ def add_user():
         except EmailNotValidError as e:
             return jsonify({"error": f"Invalid email: {str(e)}"}), 400
 
-        new_user = User(username=data['username'], password=data['password'], fname=data['fname'], lname=data['lname'], mail=data['email'])
+        new_user = User(username=data['username'], password=data['password'], fname=data['fname'], lname=data['lname'], pronouns=data['pronouns'], gender=data['gender'], age=data['age'], uni=data['uni'], abt_me=data['abt_me'], ig=data['ig'], disc=data['disc'], email=data['email'])
         db.session.add(new_user)
         
         db.session.commit()
