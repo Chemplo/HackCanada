@@ -12,7 +12,9 @@ def load_user(user_id):
 @app.route('/signup', methods=['POST'])
 def add_user():
     try:
-        data = request.get_json()  # Receive JSON data from React
+        print("Incoming request received")  # Debugging
+        data = request.get_json()
+        print("Received Data:", data)  # This will show if JSON is valid
 
         try:
             validate_email(data['email'])
@@ -23,11 +25,17 @@ def add_user():
         if existing_user:
             raise Exception("Sorry, this email is already in use")
 
-        new_user = User(username=data['username'], password=data['password'], fname=data['fname'], lname=data['lname'], pronouns=data['pronouns'], gender=data['gender'], age=data['age'], uni=data['uni'], abt_me=data['abt_me'], ig=data['ig'], disc=data['disc'], email=data['email'])
+        #new_user = User(username=data['username'], password=data['password'], fname=data['fname'], lname=data['lname'], pronouns=data['pronouns'], gender=data['gender'], age=data['age'], uni=data['uni'], abt_me=data['abt_me'], ig=data['ig'], disc=data['disc'], email=data['email'])
+        new_user = User(username=data['username'], password=data['password'], email=data['email'])
         db.session.add(new_user)
         
         db.session.commit()
-        get_users()
+        
+        stored_user = User.query.all()
+        print("Stored user in Database:")
+        for u in stored_user:
+            print(u.email)
+
         return jsonify({"message": "User added successfully!"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
