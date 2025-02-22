@@ -2,7 +2,10 @@ from flask import Flask, request, jsonify, session
 from email_validator import validate_email, EmailNotValidError
 from setup import app, db, User, login_manager  # Import necessary objects
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+import jwt # imports JWT module
+import datetime # To set the expiration time for the token
 
+SECRET_KEY = "ROOMIESPROJECTRSSN"
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -35,7 +38,22 @@ def add_user():
         
         db.session.commit()
 
-        return jsonify({"message": "User added successfully!"}), 201
+        token_payload = {
+            "id": existing_user.id,
+            "username": existing_user.username,
+            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=12) # Makes the token expire in 12 hours
+        }
+        token = jwt.encode(token_payload, SECRET_KEY, algorithm="HS256")
+
+        return jsonify({
+            "message": "User logged in successfully!",
+            "token": token,
+            "user": {
+                "id": existing_user.id,
+                "username": existing_user.username,
+                "email": existing_user.email
+            }
+        }), 200 # This token gets returned to frontend
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -57,7 +75,23 @@ def login():
         
         if existing_user.password == data['password']:
             login_user(existing_user)
-            return jsonify({"message": "User logged in successfully!"}), 201
+
+            token_payload = {
+                "id": existing_user.id,
+                "username": existing_user.username,
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=12) # Makes the token expire in 12 hours
+            }
+            token = jwt.encode(token_payload, SECRET_KEY, algorithm="HS256")
+
+            return jsonify({
+                "message": "User logged in successfully!",
+                "token": token,
+                "user": {
+                    "id": existing_user.id,
+                    "username": existing_user.username,
+                    "email": existing_user.email
+                }
+            }), 200 # This token gets returned to frontend
         else:
             raise Exception("Incorrect Password")
             
