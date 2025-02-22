@@ -111,7 +111,8 @@ def logout():
 @app.route('/current_user', methods=['GET'])
 @login_required  # Ensures only logged-in users can access this
 def get_current_user():
-    return jsonify({
+    print("Current user", current_user)
+    response = jsonify({
         "id": current_user.id,
         "username": current_user.username,
         "password": current_user.password,
@@ -125,7 +126,8 @@ def get_current_user():
         "ig": current_user.ig,
         "disc": current_user.disc,
         "email": current_user.email
-    }), 200
+    })
+    return response, 200
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

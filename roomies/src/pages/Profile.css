@@ -1,63 +1,179 @@
 .about-me-page {
     display: flex;
-    margin: 20px;
+    position: relative;
 }
 
-.sidebar {
+.about-left {
+    display: flex;
+    position: relative;
     width: 20%;
+    height: 100%;
+    left: 0;
     text-align: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 .profile-pic {
-    max-width: 58%;
-	min-height: 43%;
-    background-color: #E8DEF8;
-    border-radius: 50%;
-    margin-left: 13%;
-    margin-top: 7%;
+    display: flex;
+    position: relative;
+    object-fit: cover;
+    width: 180px;
+    height: 180px;
+    margin-top: 3rem;
 }
 
-.sidebar h2 {
-    font-size: 36px;
+.profile-info {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+}
+
+.profile-name {
+    display: flex;
+    position: relative;
+    margin-top: 0.5rem;
+    margin-bottom: 0;
     color: #65558F;
-	text-align: left;
-    margin-left: 15%;
-}
-
-.sidebar p {
-    color: gray;
-	font-size: 30px;
-    text-align: left;
-}
-
-.sidebar h3 {
+    font-family: "Josefin Sans", sans-serif;
     font-size: 40px;
+    font-weight: 400;
+}
+
+.profile-pronouns {
+    display: flex;
+    position: relative;
+    margin-top: 0;
+    margin-bottom: 0;
+    color: #898989;
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+}
+
+.profile-university {
+    display: flex;
+    position: relative;
+    margin-top: 1rem;
     color: #65558F;
-    font-weight: bold;
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 40px;
+    font-weight: 400;
 }
 
-.social-links {
-    list-style: none;
-    padding: 0;
+.profile-social-links {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    margin-top: 8rem;
 }
 
-.social-links li {
-    color: #5D4E8F;
-    margin: 5px 0;
+.profile-email-group, .profile-insta-group, .profile-disc-group {
+    display: flex;
+    position: relative;
+    margin-top: 0;
+    margin-bottom: 0;
+    align-items: center;
 }
 
-.about-me-box {
-    width: 80%; /* Adjust width */
+.profile-email-icon, .profile-insta-icon, .profile-disc-icon {
+    display: flex;
+    position: relative;
+    object-fit: cover;
+    height: 32px;
+    margin-right: 1rem;
+    margin-top: 0;
+}
+
+.profile-email, .profile-insta, .profile-disc {
+    display: flex;
+    position: relative;
+    color: #65558F;
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.about-right {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    right: 0;
+}
+
+.about-right-box {
+    display: flex;
+    position: relative;
+    width: 90%;
+    height: 100%;
+    top: 2rem;
     background-color: #C9BBDA;
-    padding: 20px;
-    border-radius: 10px; /* Rounded corners */
-    font-weight: bold;
-    font-size: 20px;
-    color: white; /* Light text */
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    flex-direction: column;
+}
+
+.about-box-header {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .about-me {
-	font-size: 64px;
-    color: #ffffff;
+    display: flex;
+    position: relative;
+    color: white;
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 64px;
+    font-weight: 400;
+    margin: 2rem;
+}
+
+.edit-button {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    background: #ECE6F0;
+    border: none;
+    height: 64px;
+    width: 64px;
+    margin: 2rem;
+    border-radius: 20px;
+    box-shadow: #65558F 4px 4px;
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.edit-button:hover {
+    transform: translate(4px, 4px);
+    box-shadow: none;
+}
+
+.edit-button-img {
+    display: flex;
+    position: relative;
+}
+
+.about-inner-box {
+    display: flex;
+    position: relative;
+    margin-left: 3rem;
+    margin-right: 3rem;
+    background-color: #E8DEF8;
+    border-radius: 15px;
+    min-height: 30%;
+}
+
+.about-me-text {
+    display: flex;
+    position: relative;
+    text-align: left;
+    margin: 2rem;
+    color: #65558F;
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 32px;
+    font-weight: 400;
 }
