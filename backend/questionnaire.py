@@ -10,16 +10,44 @@ def submit():
     try:
         data = request.get_json()  # Receive JSON data from React
 
-        user = get_current_user()
+        curr_ans = UserAns.query.filter_by(id = current_user.id).first()
+        if not curr_ans:    # if userAns doesnt exist, must be q1
+            answer = UserAns(id=data['id'], q1=data['q1'])
+            db.session.add(answer)
+        else:
+            if 'q1' in data:
+                curr_ans.q1 = data['q1']
+            elif 'q2' in data:
+                curr_ans.q2 = data['q2']
+            elif 'q3' in data:
+                curr_ans.q3 = data['q3']
+            elif 'q4' in data:
+                curr_ans.q4 = data['q4']
+            elif 'q5' in data:
+                curr_ans.q5 = data['q5']
+            elif 'q6' in data:
+                curr_ans.q6 = data['q6']
+            elif 'q7' in data:
+                curr_ans.q7 = data['q7']
+            elif 'q8' in data:
+                curr_ans.q8 = data['q8']
+            elif 'q9' in data:
+                curr_ans.q9 = data['q9']
+            elif 'q10' in data:
+                curr_ans.q10 = data['q10']
+            elif 'q11' in data:
+                curr_ans.q11 = data['q11']
+            elif 'q12' in data:
+                curr_ans.q12 = data['q12']
+            elif 'q13' in data:
+                curr_ans.q13 = data['q13']
+            elif 'q14' in data:
+                curr_ans.q14 = data['q14']
+            elif 'q15' in data:
+                curr_ans.q15 = data['q15']
+            elif 'q16' in data:
+                curr_ans.q16 = data['q16']
         
-        answer = UserAns(id=user['id'], q1=data['q1'], q2=data['q2'], 
-                         q3=data['q3'], q4=data['q4'], q5=data['q5'], 
-                         q6=data['q6'], q7=data['q7'], q8=data['q8'], 
-                         q9=data['q9'], q10=data['q10'], q11=data['q11'], 
-                         q12=data['q12'], q13=data['q13'], q14=data['q14'], 
-                         q15=data['q15'], q16=data['q16'])
-        db.session.add(answer)
-
         db.session.commit()
     except Exception as e:
         return jsonify({"error submitting questionnaire": str(e)}), 500

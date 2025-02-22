@@ -1,0 +1,29 @@
+body {
+	color: #65558F;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse; /* Removes spacing between cells */
+}
+
+th, td {
+    border: 1px solid rgb(255, 255, 255);
+    padding: 8px;
+    text-align: center;
+}
+
+/* Table Header */
+th {
+    background-color: #C9BBDA; /* Green header */
+    color: white;
+}
+
+/* Table Rows */
+tr:nth-child(even) {
+    background-color: #B7A2D2; /* Light gray for even rows */
+}
+
+tr:hover {
+    background-color: #E8DEF8; /* Highlight row on hover */
+}

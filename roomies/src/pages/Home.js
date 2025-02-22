@@ -1,6 +1,8 @@
 import './Home.css';
 import { Link } from "react-router-dom";
 
+const progress = 20
+
 function Home() {
     return (
         <div className="container">
@@ -8,6 +10,10 @@ function Home() {
                 <Link to="/questionnaire" className="dbquestionnaire">
                     <h1>Questionnaire</h1>
                 </Link>
+                <div className="progress-container">
+                    <div className="progress-bar" style={{ width: `${progress}%` }}></div>
+                </div>
+                <div className="progress_text">{progress}%</div>
             </div>
             <div className="second_row">
                 <div className="result_box">
