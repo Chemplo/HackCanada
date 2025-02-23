@@ -14,7 +14,6 @@ function Results() {
     const matchInfo = async (id) => {
         const token = localStorage.getItem("token");
         if (!token) {
-            navigate("/login");
             return;
         }
     
@@ -80,7 +79,7 @@ function Results() {
                 // Step 1: Run results computation
                 console.log("before first, result")
                 const response1 = await fetch("http://localhost:5000/result", {
-                    method: "GET",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`,
@@ -103,8 +102,16 @@ function Results() {
                 if (!response2.ok) {
                     throw new Error("Failed to fetch user results");
                 }
-    
-                const data = await response2.json();
+
+                const text = await response2.text();
+                if (!text) {
+                    console.warn("Empty JSON response from backend");
+                    return {}; // Return an empty object to prevent parsing errors
+                }
+
+                const data = JSON.parse(text);
+                console.log(data);
+
                 setResults(data);
             } catch (err) {
                 setError(err.message);
@@ -114,7 +121,10 @@ function Results() {
         runResultsAndFetch();
     }, []);
 
-    let result = results != null ? (results.compatible).split(",") : null;
+    var result;
+    if(results != null) {
+        result = (results.compatible).split(",");
+    }
     let table = document.getElementById("match-table");
     useEffect(() => {
         if (!results || !results.compatible) return;
@@ -147,8 +157,13 @@ function Results() {
     
 
     // Sample test data
-    /*
     const initialMatches = [
+        {
+            name: "-------",
+            gender: "-------",
+            contact: "-------",
+            score: 0,
+        },/*
         {
             name: "Alice Johnson",
             gender: "Female",
@@ -178,11 +193,11 @@ function Results() {
             gender: "Female",
             contact: "emily@email.com",
             score: 74,
-        },
-    ];*/
+        },*/
+    ];
 
-    const [matches, setMatches] = useState(null);
-    const [sortedMatches, setSortedMatches] = useState([]);
+    const [matches, setMatches] = useState(initialMatches);
+    const [sortedMatches, setSortedMatches] = useState(initialMatches);
     const [isScoreAscending, setIsScoreAscending] = useState(null);
     const [isGenderAscending, setIsGenderAscending] = useState(null);
 
@@ -259,8 +274,6 @@ function Results() {
 
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>Loading...</div>;
-  if (!results) return <div>Loading...</div>;
-  if (!result) return <div>Loading...</div>;
 
     return (
         <div>
