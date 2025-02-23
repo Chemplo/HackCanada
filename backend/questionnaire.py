@@ -170,3 +170,26 @@ def get_curr_results():
         }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+def submit():
+    try:
+        data = request.get_json()  # Receive JSON data from React
+        curr_ans = UserAns.query.filter_by(id=current_user.id).first()
+
+        if not curr_ans:
+            answer = UserAns(id=data['id'], q1=data['q1'])
+            db.session.add(answer)
+        else:
+            for key, value in data.items():
+                if key.startswith('q') and hasattr(curr_ans, key):
+                    setattr(curr_ans, key, value)
+
+        db.session.commit()
+
+        # Assuming 'saved_answers' is a count of how many questions were updated
+        saved_answers = sum(1 for key in data if key.startswith('q') and hasattr(curr_ans, key))
+
+        return jsonify({"saved_answers": saved_answers}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

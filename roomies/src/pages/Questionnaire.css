@@ -309,3 +309,23 @@ input[type="checkbox"], input[type="radio"] {
     box-shadow: 0 2px 0 #E8DEF8; /* Move shadow up */
     transform: translateY(2px); /* Push button down */
 }
+
+/* .save-progress {
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 15px;
+    color: white;
+    background-color: #65558F;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 10px 10px 0 #E8DEF8;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    padding: 5px 10px; 
+    margin: 2% 5%;
+} */
+
+
+/* .save-progress:active {
+    box-shadow: 0 2px 0 #E8DEF8; 
+    transform: translateY(2px); 
+} */
