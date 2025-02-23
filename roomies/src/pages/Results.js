@@ -4,10 +4,8 @@ import "./Results.css";
 const name = "rinuah";
 
 function Results() {
-    // ==========================
-    // TEST CODE (ACTIVE)
-    // ==========================
-    const [matches, setMatches] = useState([
+    // Sample test data
+    const initialMatches = [
         {
             name: "Alice Johnson",
             gender: "Female",
@@ -26,10 +24,71 @@ function Results() {
             contact: "charlie@email.com",
             score: 78,
         },
-    ]);
+        {
+            name: "David Kim",
+            gender: "Male",
+            contact: "david@email.com",
+            score: 65,
+        },
+        {
+            name: "Emily Wong",
+            gender: "Female",
+            contact: "emily@email.com",
+            score: 74,
+        },
+    ];
+
+    const [matches, setMatches] = useState(initialMatches);
+    const [sortedMatches, setSortedMatches] = useState(initialMatches);
+    const [isScoreAscending, setIsScoreAscending] = useState(null);
+    const [isGenderAscending, setIsGenderAscending] = useState(null);
+
+    // Toggle sorting order for Score
+    const toggleScoreSort = () => {
+        setIsScoreAscending(
+            isScoreAscending === null ? true : !isScoreAscending
+        );
+        setIsGenderAscending(null); // Reset gender sort when sorting score
+    };
+
+    // Toggle sorting order for Gender
+    const toggleGenderSort = () => {
+        setIsGenderAscending(
+            isGenderAscending === null ? true : !isGenderAscending
+        );
+        setIsScoreAscending(null); // Reset score sort when sorting gender
+    };
+
+    // Reset sorting to the original state
+    const resetSort = () => {
+        setIsScoreAscending(null);
+        setIsGenderAscending(null);
+        setSortedMatches(initialMatches); // Resets to the original order
+    };
+
+    // Sorting logic
+    useEffect(() => {
+        let newSortedMatches = [...matches];
+
+        if (isScoreAscending !== null) {
+            newSortedMatches.sort((a, b) =>
+                isScoreAscending ? a.score - b.score : b.score - a.score
+            );
+        }
+
+        if (isGenderAscending !== null) {
+            newSortedMatches.sort((a, b) =>
+                isGenderAscending
+                    ? a.gender.localeCompare(b.gender)
+                    : b.gender.localeCompare(a.gender)
+            );
+        }
+
+        setSortedMatches(newSortedMatches);
+    }, [isScoreAscending, isGenderAscending]);
 
     /* ==========================
-     ACTUAL CODE (COMMENTED OUT)
+     ACTUAL IMPLEMENTATION (COMMENTED OUT)
   ========================== */
     /*
   useEffect(() => {
@@ -46,6 +105,7 @@ function Results() {
           score: match.score,
         }));
         setMatches(formattedMatches);
+        setSortedMatches(formattedMatches);
       })
       .catch((error) => console.error("Error fetching matches:", error));
   }, []);
@@ -60,26 +120,60 @@ function Results() {
                     to reach out to anyone interesting!
                 </p>
 
+                {/* Match Table */}
                 <table id="match-table">
                     <thead>
                         <tr>
                             <th className="result-headers">Match Name</th>
-                            <th className="result-headers">Gender</th>
+
+                            {/* Sortable Gender Column */}
+                            <th
+                                className="result-headers"
+                                onClick={toggleGenderSort}
+                                style={{ cursor: "pointer" }}
+                            >
+                                Gender{" "}
+                                {isGenderAscending === true
+                                    ? "▲"
+                                    : isGenderAscending === false
+                                    ? "▼"
+                                    : ""}
+                            </th>
+
                             <th className="result-headers">
                                 Contact Information
                             </th>
-                            <th className="result-headers">Match Score</th>
+
+                            {/* Sortable Score Column */}
+                            <th
+                                className="result-headers"
+                                onClick={toggleScoreSort}
+                                style={{ cursor: "pointer" }}
+                            >
+                                Match Score{" "}
+                                {isScoreAscending === true
+                                    ? "▲"
+                                    : isScoreAscending === false
+                                    ? "▼"
+                                    : ""}
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {matches.map((match, index) => (
-                            <tr key={index}>
-                                <td>{match.name}</td>
-                                <td>{match.gender}</td>
-                                <td>{match.contact}</td>
-                                <td>{match.score}</td>
+                        {sortedMatches.length > 0 ? (
+                            sortedMatches.map((match, index) => (
+                                <tr key={index}>
+                                    <td>{match.name}</td>
+                                    <td>{match.gender}</td>
+                                    <td>{match.contact}</td>
+                                    <td>{match.score}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="4">No matches found.</td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
             </div>
