@@ -79,7 +79,7 @@ def submit():
 @app.route('/result', methods=['POST'])
 def result():
     try:
-        WEIGHTS = [1, 1, 3, 3, 2, 2, 2, 2, 2, 3, 2]
+        WEIGHTS = [1, 1, 3, 3, 2, 2, 2, 3, 2, 2, 3, 2]
         THRESHOLD = 80
 
         curr_user_ans = UserAns.query.filter_by(id=current_user.id).first()
@@ -118,10 +118,7 @@ def calculate_weighted_score(ans1, ans2, weights):
 
             score += weights[i-FIRST_WEIGHTED_QUESTION] * (1 if answer1 == answer2 else 0)
 
-        if score == 0:
-            return 0
-        else:
-            return (score / TOTAL_WEIGHT) * 100
+        return (score / TOTAL_WEIGHT) * 100
 
     except Exception as e:
         return jsonify({"error calculating score": str(e)}), 500
