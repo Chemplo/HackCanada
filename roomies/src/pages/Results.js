@@ -149,13 +149,13 @@ function Results() {
     
 
     // Sample test data
-    const initialMatches = [
+    const initialMatches = [/*
         {
             name: "-------",
             gender: "-------",
             contact: "-------",
             score: 0,
-        },/*
+        },*/
         {
             name: "Alice Johnson",
             gender: "Female",
@@ -185,7 +185,7 @@ function Results() {
             gender: "Female",
             contact: "emily@email.com",
             score: 74,
-        },*/
+        },
     ];
 
     const [matches, setMatches] = useState(initialMatches);
