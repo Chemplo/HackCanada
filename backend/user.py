@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from email_validator import validate_email, EmailNotValidError
-from setup import app, db, User  # Removed Flask-Login imports
+from setup import app, db, User, UserAns, Results  # Removed Flask-Login imports
 import jwt
 import datetime
 from functools import wraps

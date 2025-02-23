@@ -100,7 +100,6 @@ def result():
             if curr_user_ans.id != user.id:
                 score = calculate_weighted_score(curr_user_ans, 
                                                  user, WEIGHTS)
-                print(user + " has score " + score)
                 if score >= THRESHOLD:
                     print("user is compatible")
                     curr_compatible.append(f"{user.id};{score}")  
@@ -109,7 +108,7 @@ def result():
         if existing_result:
             existing_result.compatible = ",".join(curr_compatible)
         else:
-            new_res = Results(id=request.user_id, compatible=",".join(curr_compatible))
+            new_res = Results(id=request.user_id, compatible=",".join(curr_compatible), pinned="")
             db.session.add(new_res)
 
         db.session.commit()
@@ -174,38 +173,15 @@ def get_curr_user_ans():
 @jwt_required  # Ensures only logged-in users can access this
 def get_curr_results():
     try:
-        existing_user = Results.query.filter_by(id = request.user_id).first()
-        if not existing_user:
+        user = Results.query.filter_by(id = request.user_id).first()
+        if not user:
             raise Exception("Sorry, this user has no computed results")
         
-        curr_res = Results.query.filter_by(id = request.user_id).first()
         return jsonify({
-            "id": curr_res.id,
-            "compatible": curr_res.compatible,
-            "pinned": curr_res.pinned
+            "id": user.id,
+            "compatible": user.compatible,
+            "pinned": user.pinned,
         }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-
-def submit():
-    try:
-        data = request.get_json()  # Receive JSON data from React
-        curr_ans = UserAns.query.filter_by(id=current_user.id).first()
-
-        if not curr_ans:
-            answer = UserAns(id=data['id'], q1=data['q1'])
-            db.session.add(answer)
-        else:
-            for key, value in data.items():
-                if key.startswith('q') and hasattr(curr_ans, key):
-                    setattr(curr_ans, key, value)
-
-        db.session.commit()
-
-        # Assuming 'saved_answers' is a count of how many questions were updated
-        saved_answers = sum(1 for key in data if key.startswith('q') and hasattr(curr_ans, key))
-
-        return jsonify({"saved_answers": saved_answers}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500

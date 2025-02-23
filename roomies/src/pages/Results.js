@@ -76,42 +76,32 @@ function Results() {
             }
     
             try {
-                // Step 1: Run results computation
-                console.log("before first, result")
-                const response1 = await fetch("http://localhost:5000/result", {
+                await fetch("http://localhost:5000/result", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`,
                     }
                 });
-                console.log("returned result")
-                if (!response1.ok) {
-                    throw new Error("Failed to compute results");
-                }
     
-                // Step 2: Fetch results after computing them
-                const response2 = await fetch("http://localhost:5000/curr_results", {
+                const response = await fetch("http://localhost:5000/curr_results", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`
                     }
                 });
-    
-                if (!response2.ok) {
-                    throw new Error("Failed to fetch user results");
-                }
-
-                const text = await response2.text();
+                
+                const text = await response.text();
+                console.log(text);
                 if (!text) {
                     console.warn("Empty JSON response from backend");
-                    return {}; // Return an empty object to prevent parsing errors
+                    setResults({});
+                    return;
                 }
-
-                const data = JSON.parse(text);
-                console.log(data);
-
+    
+                const data = await text.json();
+                console.log("Results:", data);
                 setResults(data);
             } catch (err) {
                 setError(err.message);
@@ -122,8 +112,10 @@ function Results() {
     }, []);
 
     var result;
-    if(results != null) {
-        result = (results.compatible).split(",");
+    if(results && results.compatible) {
+        result = results.compatible.split(',');
+    } else {
+        result = [];
     }
     let table = document.getElementById("match-table");
     useEffect(() => {
