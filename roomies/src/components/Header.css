@@ -110,6 +110,12 @@
     margin: 1rem;
 }
 
+.logout-wrapper {
+    display: flex;
+    position: relative;
+    text-decoration: none;
+}
+
 .logout-btn {
     display: flex;
     position: relative;

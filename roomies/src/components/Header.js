@@ -19,7 +19,9 @@ function Header() {
                         <Link to="/profile">
                             <img className="profile-icon" src={profileIcon} alt="Profile" />
                         </Link>
+                        <Link className="logout-wrapper" to="/">
                         <button className="logout-btn" onClick={logout}>Logout</button>
+                        </Link>
                     </div>
                 ) : (  // Otherwise, show login/signup buttons
                     <Link className="login-btn" to="/login">
