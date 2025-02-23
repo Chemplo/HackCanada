@@ -117,6 +117,30 @@ input[type="checkbox"], input[type="radio"] {
     transform: scale(1.3);
 }
 
+.uparrow {
+    background: #65558F;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10rem;
+    box-shadow: 10px 10px 0 #E8DEF8; /* Solid shadow with no blur */
+    transition: all 0.1s ease;
+    padding-inline: 3%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    width: 50px;
+    height: 50px;
+    right: 10%;
+    position: absolute;
+
+    align-self: flex-start; /* Align at the bottom of the column of answers */
+}
+
+.uparrow:active {
+    box-shadow: 0 2px 0 #E8DEF8; /* Move shadow up */
+    transform: translateY(2px); /* Push button down */
+}
+
 /* Button styles */
 .downarrow {
     background: #65558F;
@@ -135,6 +159,7 @@ input[type="checkbox"], input[type="radio"] {
     position: absolute;
 
     align-self: flex-end; /* Align at the bottom of the column of answers */
+    margin-bottom: 6rem;
 }
 
 .downarrow:active {
@@ -184,6 +209,31 @@ input[type="checkbox"], input[type="radio"] {
     font-size: 24px;
 }
 
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    text-align: center; /* Ensures text is centered within the box */
+    gap: 10%;
+    width: 20%;
+}
+
+.back-button {
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 30px;
+    color: white;
+    background-color: #65558F;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 10px 10px 0 #E8DEF8; /* Solid shadow with no blur */
+    cursor: pointer;
+    transition: all 0.1s ease;
+    padding-inline: 4%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+
 .finish-button {
     font-family: "Josefin Sans", sans-serif;
     font-size: 30px;
@@ -194,9 +244,9 @@ input[type="checkbox"], input[type="radio"] {
     box-shadow: 10px 10px 0 #E8DEF8; /* Solid shadow with no blur */
     cursor: pointer;
     transition: all 0.1s ease;
-    padding-inline: 3%;
-    padding-top: 1%;
-    padding-bottom: 1%;
+    padding-inline: 4%;
+    padding-top: 2%;
+    padding-bottom: 2%;
 }
 
 .start-button:active {
@@ -250,9 +300,9 @@ input[type="checkbox"], input[type="radio"] {
     box-shadow: 10px 10px 0 #E8DEF8; /* Solid shadow with no blur */
     cursor: pointer;
     transition: all 0.1s ease;
-    padding-inline: 3%;
-    padding-top: 1%;
-    padding-bottom: 1%;
+    padding-inline: 11%;
+    padding-top: 9%;
+    padding-bottom: 9%; 
 }
 
 .end-button:active {

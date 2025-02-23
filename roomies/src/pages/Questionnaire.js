@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Questionnaire.css";
 import downarrow from "../images/downarrow.png";
+import uparrow from "../images/uparrow.png";
 import { Link } from "react-router-dom";
 
 function Questionnaire() {
@@ -10,7 +11,10 @@ function Questionnaire() {
         setCurrentStep(1);
     }
     
-
+    const backQuestion = () => {
+        setCurrentStep((prevStep) => prevStep - 1);
+    }
+ 
     const nextQuestion = () => {
         setCurrentStep((prevStep) => prevStep + 1);  // Move to the next question
     };
@@ -52,6 +56,7 @@ function Questionnaire() {
                     <label><input type="checkbox" name="lease" value="year" />1 year</label><br />
                     <label><input type="checkbox" name="lease" value="more" />1 year +</label><br />
                 </div>
+                <input className="uparrow" type="image" src={uparrow} alt="back" width="100" height="50" onClick={backQuestion}></input>
                 <input className="downarrow" type="image" src={downarrow} alt="submit" width="100" height="50" onClick={nextQuestion}></input>
             </form>
         )}
@@ -65,6 +70,7 @@ function Questionnaire() {
                     <label><input type="checkbox" name="gender" value="female" />female</label><br />
                     <label><input type="checkbox" name="gender" value="nonbinary/other" />nonbinary/other</label><br />
                 </div>
+                <input className="uparrow" type="image" src={uparrow} alt="back" width="100" height="50" onClick={backQuestion}></input>
                 <input className="downarrow" type="image" src={downarrow} alt="submit" width="100" height="50" onClick={nextQuestion}></input>
             </form>
         )}
@@ -82,6 +88,7 @@ function Questionnaire() {
                     <label><input type="checkbox" name="age" value="23" />23</label><br />
                     <label><input type="checkbox" name="age" value="24+" />24+</label><br />
                 </div>
+                <input className="uparrow" type="image" src={uparrow} alt="back" width="100" height="50" onClick={backQuestion}></input>
                 <input className="downarrow" type="image" src={downarrow} alt="submit" width="100" height="50" onClick={nextQuestion}></input>
             </form>
         )}
@@ -95,6 +102,7 @@ function Questionnaire() {
                     <label><input type="radio" name="sleep" value="night owl" />night owl</label><br />
                     <label><input type="radio" name="sleep" value="flexible" />flexible</label><br />
                 </div>
+                <input className="uparrow" type="image" src={uparrow} alt="back" width="100" height="50" onClick={backQuestion}></input>
                 <input className="downarrow" type="image" src={downarrow} alt="submit" width="100" height="50" onClick={nextQuestion}></input>
             </form>
         )}
@@ -108,6 +116,7 @@ function Questionnaire() {
                     <label><input type="radio" name="study" value="outside" />outside study-er</label><br />
                     <label><input type="radio" name="study" value="background noise" />background noise is fine</label><br />
                 </div>
+                <input className="uparrow" type="image" src={uparrow} alt="back" width="100" height="50" onClick={backQuestion}></input>
                 <input className="downarrow" type="image" src={downarrow} alt="submit" width="100" height="50" onClick={nextQuestion}></input>
             </form>
         )}
@@ -121,6 +130,7 @@ function Questionnaire() {
                     <label><input type="radio" name="cleanliness" value="somewhat tidy" />somewhat tidy</label><br />
                     <label><input type="radio" name="cleanliness" value="messy is fine" />messy is fine</label><br />
                 </div>
+                <input className="uparrow" type="image" src={uparrow} alt="back" width="100" height="50" onClick={backQuestion}></input>
                 <input className="downarrow" type="image" src={downarrow} alt="submit" width="100" height="50" onClick={nextQuestion}></input>
             </form>
         )}
@@ -134,6 +144,7 @@ function Questionnaire() {
                     <label><input type="radio" name="noise" value="some noise" />some noise is fine</label><br />
                     <label><input type="radio" name="noise" value="loud" />any noise is fine</label><br />
                 </div>
+                <input className="uparrow" type="image" src={uparrow} alt="back" width="100" height="50" onClick={backQuestion}></input>
                 <input className="downarrow" type="image" src={downarrow} alt="submit" width="100" height="50" onClick={nextQuestion}></input>
             </form>
         )}
@@ -147,6 +158,7 @@ function Questionnaire() {
                     <label><input type="radio" name="smoking" value="no" />no thank you</label><br />
                     <label><input type="radio" name="smoking" value="occasionally" />occasionally is fine</label><br />
                 </div>
+                <input className="uparrow" type="image" src={uparrow} alt="back" width="100" height="50" onClick={backQuestion}></input>
                 <input className="downarrow" type="image" src={downarrow} alt="submit" width="100" height="50" onClick={nextQuestion}></input>
             </form>
         )}
@@ -160,6 +172,7 @@ function Questionnaire() {
                     <label><input type="radio" name="drinking" value="no" />no thank you</label><br />
                     <label><input type="radio" name="drinking" value="occasionally" />occasionally is fine</label><br />
                 </div>
+                <input className="uparrow" type="image" src={uparrow} alt="back" width="100" height="50" onClick={backQuestion}></input>
                 <input className="downarrow" type="image" src={downarrow} alt="submit" width="100" height="50" onClick={nextQuestion}></input>
             </form>
         )}
@@ -173,6 +186,7 @@ function Questionnaire() {
                     <label><input type="radio" name="cooking" value="no" />only minimally</label><br />
                     <label><input type="radio" name="cooking" value="occasionally" />occasionally is fine</label><br />
                 </div>
+                <input className="uparrow" type="image" src={uparrow} alt="back" width="100" height="50" onClick={backQuestion}></input>
                 <input className="downarrow" type="image" src={downarrow} alt="submit" width="100" height="50" onClick={nextQuestion}></input>
             </form>
         )}
@@ -185,6 +199,7 @@ function Questionnaire() {
                     <label><input type="radio" name="pets" value="yes" />yes</label><br />
                     <label><input type="radio" name="pets" value="no" />no</label><br />
                 </div>
+                <input className="uparrow" type="image" src={uparrow} alt="back" width="100" height="50" onClick={backQuestion}></input>
                 <input className="downarrow" type="image" src={downarrow} alt="submit" width="100" height="50" onClick={nextQuestion}></input>
             </form>
         )}
@@ -198,6 +213,7 @@ function Questionnaire() {
                     <label><input type="radio" name="social" value="sometimes" />sometimes social</label><br />
                     <label><input type="radio" name="social" value="no" />prefers alone time</label><br />
                 </div>
+                <input className="uparrow" type="image" src={uparrow} alt="back" width="100" height="50" onClick={backQuestion}></input>
                 <input className="downarrow" type="image" src={downarrow} alt="submit" width="100" height="50" onClick={nextQuestion}></input>
             </form>
         )}
@@ -211,6 +227,7 @@ function Questionnaire() {
                     <label><input type="radio" name="conflict" value="avoid" />avoid conflict</label><br />
                     <label><input type="radio" name="conflict" value="passive" />passive approach</label><br />
                 </div>
+                <input className="uparrow" type="image" src={uparrow} alt="back" width="100" height="50" onClick={backQuestion}></input>
                 <input className="downarrow" type="image" src={downarrow} alt="submit" width="100" height="50" onClick={nextQuestion}></input>
             </form>
         )}
@@ -224,6 +241,7 @@ function Questionnaire() {
                     <label><input type="radio" name="guests" value="no" />no thank you/minimal guests</label><br />
                     <label><input type="radio" name="guests" value="occasionally" />occasionally is fine</label><br />
                 </div>
+                <input className="uparrow" type="image" src={uparrow} alt="back" width="100" height="50" onClick={backQuestion}></input>
                 <input className="downarrow" type="image" src={downarrow} alt="submit" width="100" height="50" onClick={nextQuestion}></input>
             </form>
         )}
@@ -237,6 +255,7 @@ function Questionnaire() {
                     <label><input type="radio" name="friends" value="no" />no attachment</label><br />
                     <label><input type="radio" name="friends" value="sure" />i'm fine with anything</label><br />
                 </div>
+                <input className="uparrow" type="image" src={uparrow} alt="back" width="100" height="50" onClick={backQuestion}></input>
                 <input className="downarrow" type="image" src={downarrow} alt="submit" width="100" height="50" onClick={nextQuestion}></input>
             </form>
         )}
@@ -250,7 +269,10 @@ function Questionnaire() {
                         <p>wanting to change anwers beyong this page will require you to reopen the entire questionnaire again.</p>
                     </div>
                 </div>
-                <button className="finish-button" onClick={nextQuestion}>submit</button>
+                <div className="buttons">
+                    <button className="back-button" onClick={backQuestion}>back</button>
+                    <button className="finish-button" onClick={nextQuestion}>submit</button>
+                </div>
             </div>
         }
     
@@ -258,7 +280,7 @@ function Questionnaire() {
             <div className="end-page">
                 <h1 className="end-header">thank you so much for submitting our questionnaire!</h1>
                 <Link to="/">
-                    <button className="end-button">go home</button>
+                    <button className="end-button">home</button>
                 </Link>
             </div>
     )}
