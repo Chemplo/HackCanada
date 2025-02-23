@@ -2,10 +2,33 @@ from flask import request, jsonify
 from setup import app, db, User, UserAns, Results  # Import necessary objects
 from user import get_current_user
 from flask_login import login_required, current_user
+import jwt
+
+SECRET_KEY = "ROOMIESPROJECTRSSN"
+
+def jwt_required(fn):
+    """Custom decorator to check for a valid JWT token."""
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        auth_header = request.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return jsonify({"error": "Unauthorized - No Token Provided"}), 401
+        
+        token = auth_header.split(" ")[1]
+        try:
+            decoded_token = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            request.user_id = decoded_token["id"]
+        except jwt.ExpiredSignatureError:
+            return jsonify({"error": "Token expired. Please log in again."}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({"error": "Invalid token. Please log in again."}), 401
+        
+        return fn(*args, **kwargs)
+    return wrapper
 
 # Route to receive data from React and insert into DB
 @app.route('/submit', methods=['POST'])
-@login_required
+@jwt_required
 def submit():
     try:
         data = request.get_json()  # Receive JSON data from React
@@ -104,7 +127,7 @@ def calculate_weighted_score(ans1, ans2, weights):
         return jsonify({"error calculating score": str(e)}), 500
 
 @app.route('/curr_user_ans', methods=['POST'])
-@login_required  # Ensures only logged-in users can access this
+@jwt_required  # Ensures only logged-in users can access this
 def get_curr_user_ans():
     try:
         existing_user = UserAns.query.filter_by(id = current_user.id).first()
@@ -135,7 +158,7 @@ def get_curr_user_ans():
         return jsonify({"error": str(e)}), 500
 
 @app.route('/curr_results', methods=['POST'])
-@login_required  # Ensures only logged-in users can access this
+@jwt_required  # Ensures only logged-in users can access this
 def get_curr_results():
     try:
         existing_user = Results.query.filter_by(id = current_user.id).first()

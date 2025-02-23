@@ -4,6 +4,41 @@ import "./Results.css";
 const name = "rinuah";
 
 function Results() {
+
+    const [user, setUser] = useState(null);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                setError("No authentication token found. Please log in.");
+                return;
+            }
+
+            try {
+                const response = await fetch("http://localhost:5000/current_user", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}` // Send token in header
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error("Failed to fetch user data");
+                }
+                
+                const data = await response.json();
+                setUser(data);
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+
+        fetchUser();
+    }, []);
+
     // Sample test data
     const initialMatches = [
         {
@@ -111,10 +146,13 @@ function Results() {
   }, []);
   */
 
+  if (error) return <div>Error: {error}</div>;
+  if (!user) return <div>Loading...</div>;
+
     return (
         <div>
             <div className="results-page">
-                <h1 className="result-text">Welcome back, {name}</h1>
+                <h1 className="result-text">Welcome back, {user.username != null ? user.username : name}</h1>
                 <p className="result-text">
                     Please look through the matches we have for you :D Feel free
                     to reach out to anyone interesting!

@@ -38,11 +38,11 @@ function Header() {
             <div className="dropdown-menu">
                 <Link className="dashboard" to="/" onClick={() => setIsOpen(!isOpen)}>Home</Link>
                 <span className="divider"/>
-                <Link className="question" to="/questionnaire" onClick={() => setIsOpen(!isOpen)}>Questionnaire</Link>
+                <Link className="question" to={user ? "/questionnaire" : "/login"} onClick={() => setIsOpen(!isOpen)}>Questionnaire</Link>
                 <span className="divider"/>
-                <Link className="results" to="/results" onClick={() => setIsOpen(!isOpen)}>Results</Link>
+                <Link className="results" to={user ? "/results" : "/login"} onClick={() => setIsOpen(!isOpen)}>Results</Link>
                 <span className="divider"/>
-                <Link className="profile" to="/profile" onClick={() => setIsOpen(!isOpen)}>My Profile</Link>
+                <Link className="profile" to={user ? "/profile" : "/login"} onClick={() => setIsOpen(!isOpen)}>My Profile</Link>
                 <span className="divider"/>
                 <Link className="about" to="/about" onClick={() => setIsOpen(!isOpen)}>About Us</Link>
             </div>

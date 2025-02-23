@@ -2,9 +2,32 @@ from flask import Flask, request, jsonify, session
 from setup import app, db, User, login_manager  # Import necessary objects
 from user import get_current_user
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+import jwt
+
+SECRET_KEY = "ROOMIESPROJECTRSSN"
+
+def jwt_required(fn):
+    """Custom decorator to check for a valid JWT token."""
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        auth_header = request.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return jsonify({"error": "Unauthorized - No Token Provided"}), 401
+        
+        token = auth_header.split(" ")[1]
+        try:
+            decoded_token = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            request.user_id = decoded_token["id"]
+        except jwt.ExpiredSignatureError:
+            return jsonify({"error": "Token expired. Please log in again."}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({"error": "Invalid token. Please log in again."}), 401
+        
+        return fn(*args, **kwargs)
+    return wrapper
 
 @app.route('/edit_profile', methods=['POST'])
-@login_required
+@jwt_required
 def edit_profile():
 	try:
 		data = request.get_json()
