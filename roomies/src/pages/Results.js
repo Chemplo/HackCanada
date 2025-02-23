@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Results.css";
 
 const name = "rinuah";
@@ -7,12 +8,13 @@ function Results() {
 
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUser = async () => {
             const token = localStorage.getItem("token");
             if (!token) {
-                setError("No authentication token found. Please log in.");
+                navigate("/login");
                 return;
             }
 

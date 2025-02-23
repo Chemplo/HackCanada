@@ -3,16 +3,18 @@ import profilePic from "../images/Generic avatar.png";
 import starIcon from "../images/Icon Button.png";
 import editButton from "../images/icon.png";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUser = async () => {
             const token = localStorage.getItem("token");
             if (!token) {
-                setError("No authentication token found. Please log in.");
+                navigate("/login");
                 return;
             }
 

@@ -1,11 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Questionnaire.css";
 import downarrow from "../images/downarrow.png";
 import uparrow from "../images/uparrow.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Questionnaire() {
     const [currentStep, setCurrentStep] =useState("start");
+    const [user, setUser] = useState(null);
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                navigate("/login");
+                return;
+            }
+
+            try {
+                const response = await fetch("http://localhost:5000/current_user", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}` // Send token in header
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error("Failed to fetch user data");
+                }
+                
+                const data = await response.json();
+                setUser(data);
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+
+        fetchUser();
+    }, []);
+
+    if (error) return <div>Error: {error}</div>;
+    if (!user) return <div>Loading...</div>;
 
     const startQuestionnaire = () => {
         setCurrentStep(1);
