@@ -7,22 +7,49 @@ import { useState, useEffect } from "react";
 function Profile() {
     const [userData, setUserData] = useState(null);
     const [error, setError] = useState("");
+    
+    const getData = async (id) => {
+            try {
+                const response = await fetch("http://127.0.0.1:5000/inputted_user", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(id),
+                });
+        
+                const data = await response.json();
+                
+                if (response.ok && data.token) {
+                    console.log("User logged in successfully:", data);
+                    localStorage.setItem("token", data.token);
+                    setUserData(jwtDecode(data.token));
+                    return true;
+                } else {
+                    console.error("Login error:", data.error);
+                    return false;
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                return false;
+            }
+        };
 
-    useEffect(() => {
+    if (getData(1)) {
+        console.log("yay");
+    }
+    /*useEffect(() => {
         const fetchUserData = async () => {
             try {
                 console.log("Fetching user data...");
-                const response = await fetch(
-                    "http://127.0.0.1:5000/current_user",
-                    {
-                        method: "GET",
-                        credentials: "include", // Make sure credentials are included
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                    }
-                );
-
+                const response = await fetch("http://127.0.0.1:5000/current_user", {
+                    method: "GET",
+                    credentials: "include", // Make sure credentials are included
+                    headers: { 
+                        "Content-Type": "application/json",
+                     }
+                });
+        
                 console.log("Response status:", response.status);
                 const data = await response.json();
                 console.log("User data:", data);
@@ -39,7 +66,9 @@ function Profile() {
         };
 
         fetchUserData();
-    }, []);
+    }, []);*/
+
+    if (!userData) return <p>Loading...</p>;
 
     return (
         <>

@@ -111,25 +111,31 @@ def logout():
 @app.route('/current_user', methods=['GET'])
 @login_required  # Ensures only logged-in users can access this
 def get_current_user():
-    print("Current user", current_user)
-    response = jsonify({
-        "id": current_user.id,
-        "username": current_user.username,
-        "password": current_user.password,
-        "fname": current_user.fname,
-        "lname": current_user.lname,
-        "pronouns": current_user.pronouns,
-        "gender": current_user.gender,
-        "age": current_user.age,
-        "uni": current_user.uni,
-        "abt_me": current_user.abt_me,
-        "ig": current_user.ig,
-        "disc": current_user.disc,
-        "email": current_user.email
-    })
-    return response, 200
+    try: 
+        if not current_user.is_authenticated:
+            raise Exception("Sorry")
+        print("inside func")
+        print("Current user", current_user)
+        response = jsonify({
+            "id": current_user.id,
+            "username": current_user.username,
+            "password": current_user.password,
+            "fname": current_user.fname,
+            "lname": current_user.lname,
+            "pronouns": current_user.pronouns,
+            "gender": current_user.gender,
+            "age": current_user.age,
+            "uni": current_user.uni,
+            "abt_me": current_user.abt_me,
+            "ig": current_user.ig,
+            "disc": current_user.disc,
+            "email": current_user.email
+        })
+        return response, 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-@app.route('/inputted_user', methods=['GET'])
+@app.route('/inputted_user', methods=['POST'])
 def get_inputted_user():
     data = request.get_json()
     inputted_user = User.query.filter_by(username = data['id']).first()
