@@ -3,6 +3,7 @@ from setup import app, db, User, login_manager  # Import necessary objects
 from user import get_current_user
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 import jwt
+from functools import wraps
 
 SECRET_KEY = "ROOMIESPROJECTRSSN"
 

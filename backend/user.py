@@ -104,5 +104,32 @@ def get_current_user():
         "email": user.email
     }), 200
 
+@app.route('/inputted_user', methods=['GET'])
+def get_inputted_user():
+
+    data = request.get_json()
+
+    user = User.query.filter_by(id=data['id']).first()
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
+    return jsonify({
+        "id": user.id,
+        "username": user.username,
+        "password": user.password,
+        "fname": user.fname,
+        "lname": user.lname,
+        "pronouns": user.pronouns,
+        "gender": user.gender,
+        "age": user.age,
+        "uni": user.uni,
+        "abt_me": user.abt_me,
+        "ig": user.ig,
+        "disc": user.disc,
+        "email": user.email
+    }), 200
+
+    
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

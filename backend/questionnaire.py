@@ -3,6 +3,7 @@ from setup import app, db, User, UserAns, Results  # Import necessary objects
 from user import get_current_user
 from flask_login import login_required, current_user
 import jwt
+from functools import wraps
 
 SECRET_KEY = "ROOMIESPROJECTRSSN"
 
@@ -10,6 +11,9 @@ def jwt_required(fn):
     """Custom decorator to check for a valid JWT token."""
     @wraps(fn)
     def wrapper(*args, **kwargs):
+        if request.method == "OPTIONS":
+            return '', 204
+        
         auth_header = request.headers.get("Authorization")
         if not auth_header or not auth_header.startswith("Bearer "):
             return jsonify({"error": "Unauthorized - No Token Provided"}), 401
@@ -33,7 +37,7 @@ def submit():
     try:
         data = request.get_json()  # Receive JSON data from React
 
-        curr_ans = UserAns.query.filter_by(id = current_user.id).first()
+        curr_ans = UserAns.query.filter_by(id = request.user_id).first()
         if not curr_ans:    # if userAns doesnt exist, must be q1
             answer = UserAns(id=data['id'], q1=data['q1'])
             db.session.add(answer)
@@ -76,32 +80,44 @@ def submit():
         return jsonify({"error submitting questionnaire": str(e)}), 500
     
 # Route to receive data from React and insert into DB
-@app.route('/result', methods=['POST'])
+# @jwt_required
+@app.route('/result', methods=['GET', 'POST'])
 def result():
     try:
+        
         WEIGHTS = [1, 1, 3, 3, 2, 2, 2, 3, 2, 2, 3, 2]
         THRESHOLD = 80
 
-        curr_user_ans = UserAns.query.filter_by(id=current_user.id).first()
+        curr_user_ans = UserAns.query.filter_by(id=request.user_id).first()
+        if not curr_user_ans:
+            return jsonify({"error": "User has not completed the questionnaire"}), 400
+        print("current users answers exist")
 
-        curr_compatible = "" 
         users = UserAns.query.all()
+        curr_compatible = []
 
         for user in users:
             if curr_user_ans.id != user.id:
                 score = calculate_weighted_score(curr_user_ans, 
                                                  user, WEIGHTS)
+                print(user + " has score " + score)
                 if score >= THRESHOLD:
-                    curr_compatible += f"{user.id};{score},"  
+                    print("user is compatible")
+                    curr_compatible.append(f"{user.id};{score}")  
 
-        new_res = Results(id = current_user.id, compatible = curr_compatible)
-        db.session.add(new_res)
-        
+        existing_result = Results.query.filter_by(id=request.user_id).first()
+        if existing_result:
+            existing_result.compatible = ",".join(curr_compatible)
+        else:
+            new_res = Results(id=request.user_id, compatible=",".join(curr_compatible))
+            db.session.add(new_res)
+
         db.session.commit()
-
+        
+        print("running")
         return jsonify({"message": "User results inserted successfully!"}), 200
     except Exception as e:
-        return jsonify({"error generating resuts": str(e)}), 500
+        return jsonify({"error generating results": str(e)}), 500
     
 def calculate_weighted_score(ans1, ans2, weights):
     try:
@@ -123,15 +139,15 @@ def calculate_weighted_score(ans1, ans2, weights):
     except Exception as e:
         return jsonify({"error calculating score": str(e)}), 500
 
-@app.route('/curr_user_ans', methods=['POST'])
+@app.route('/curr_user_ans', methods=['GET'])
 @jwt_required  # Ensures only logged-in users can access this
 def get_curr_user_ans():
     try:
-        existing_user = UserAns.query.filter_by(id = current_user.id).first()
+        existing_user = UserAns.query.filter_by(id = request.user_id).first()
         if not existing_user:
             raise Exception("Sorry, this user has not completed the questionnaire")
         
-        curr_ans = UserAns.query.filter_by(id = current_user.id).first()
+        curr_ans = UserAns.query.filter_by(id = request.user_id).first()
         return jsonify({
             "id": curr_ans.id,
             "q1": curr_ans.q1,
@@ -154,15 +170,15 @@ def get_curr_user_ans():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/curr_results', methods=['POST'])
+@app.route('/curr_results', methods=['GET'])
 @jwt_required  # Ensures only logged-in users can access this
 def get_curr_results():
     try:
-        existing_user = Results.query.filter_by(id = current_user.id).first()
+        existing_user = Results.query.filter_by(id = request.user_id).first()
         if not existing_user:
             raise Exception("Sorry, this user has no computed results")
         
-        curr_res = Results.query.filter_by(id = current_user.id).first()
+        curr_res = Results.query.filter_by(id = request.user_id).first()
         return jsonify({
             "id": curr_res.id,
             "compatible": curr_res.compatible,

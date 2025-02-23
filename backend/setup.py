@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, make_response, request, jsonify, session
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
@@ -9,14 +9,33 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///roomies.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-#CORS(app)
+CORS(app)
 
 # Flask-Login Setup
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'  # Redirects to login if unauthorized access occurs
-CORS(app, origins="http://localhost:3000", supports_credentials=True)
+# CORS(app, origins="http://localhost:3000", supports_credentials=True)
 
+
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = "http://localhost:3000"  # Adjust as needed
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    return response
+    
+###
+
+@app.after_request
+def after_request(response):
+    return add_cors_headers(response)
+
+# Handles preflight requests
+@app.route('/', defaults={'path': ''}, methods=['OPTIONS', 'POST', 'GET'])
+@app.route('/<path:path>', methods=['OPTIONS', 'POST', 'GET'])
+def options_preflight(path):
+    return add_cors_headers(make_response())
 
 # Database Model
 class Gender(db.Model):

@@ -7,8 +7,35 @@ const name = "rinuah";
 function Results() {
 
     const [user, setUser] = useState(null);
+    const [results, setResults] = useState(null);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+
+    const matchInfo = async (id) => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            navigate("/login");
+            return;
+        }
+    
+        try {
+            const response = await fetch(`http://localhost:5000/inputted_user?id=${id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}` // Ensure token is sent
+                }
+            });
+    
+            if (!response.ok) {
+                throw new Error("Failed to fetch user data");
+            }
+    
+            return await response.json();
+        } catch (err) {
+            setError(err.message);
+        }
+    };
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -41,7 +68,86 @@ function Results() {
         fetchUser();
     }, []);
 
+    useEffect(() => {
+        const runResultsAndFetch = async () => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                navigate("/login");
+                return;
+            }
+    
+            try {
+                // Step 1: Run results computation
+                console.log("before first, result")
+                const response1 = await fetch("http://localhost:5000/result", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    }
+                });
+                console.log("returned result")
+                if (!response1.ok) {
+                    throw new Error("Failed to compute results");
+                }
+    
+                // Step 2: Fetch results after computing them
+                const response2 = await fetch("http://localhost:5000/curr_results", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+    
+                if (!response2.ok) {
+                    throw new Error("Failed to fetch user results");
+                }
+    
+                const data = await response2.json();
+                setResults(data);
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+    
+        runResultsAndFetch();
+    }, []);
+
+    let result = results != null ? (results.compatible).split(",") : null;
+    let table = document.getElementById("match-table");
+    useEffect(() => {
+        if (!results || !results.compatible) return;
+    
+        const fetchMatches = async () => {
+            const resultPairs = results.compatible.split(",").filter(pair => pair);
+            const fetchedMatches = [];
+    
+            for (let pair of resultPairs) {
+                let [matchId, score] = pair.split(";");
+                let userData = await matchInfo(matchId);
+    
+                if (userData) {
+                    fetchedMatches.push({
+                        name: `${userData.fname} ${userData.lname}`,
+                        gender: userData.gender,
+                        contact: userData.email,
+                        score: parseInt(score),
+                    });
+                }
+            }
+    
+            setMatches(fetchedMatches);
+            setSortedMatches(fetchedMatches);
+        };
+    
+        fetchMatches();
+    }, [results]);
+    
+    
+
     // Sample test data
+    /*
     const initialMatches = [
         {
             name: "Alice Johnson",
@@ -73,10 +179,10 @@ function Results() {
             contact: "emily@email.com",
             score: 74,
         },
-    ];
+    ];*/
 
-    const [matches, setMatches] = useState(initialMatches);
-    const [sortedMatches, setSortedMatches] = useState(initialMatches);
+    const [matches, setMatches] = useState(null);
+    const [sortedMatches, setSortedMatches] = useState([]);
     const [isScoreAscending, setIsScoreAscending] = useState(null);
     const [isGenderAscending, setIsGenderAscending] = useState(null);
 
@@ -100,11 +206,14 @@ function Results() {
     const resetSort = () => {
         setIsScoreAscending(null);
         setIsGenderAscending(null);
-        setSortedMatches(initialMatches); // Resets to the original order
+        setSortedMatches(table); // Resets to the original order
     };
 
     // Sorting logic
     useEffect(() => {
+        if(matches == null) {
+            return;
+        }
         let newSortedMatches = [...matches];
 
         if (isScoreAscending !== null) {
@@ -150,6 +259,8 @@ function Results() {
 
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>Loading...</div>;
+  if (!results) return <div>Loading...</div>;
+  if (!result) return <div>Loading...</div>;
 
     return (
         <div>
