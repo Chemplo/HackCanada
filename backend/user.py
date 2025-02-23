@@ -1,153 +1,107 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify
 from email_validator import validate_email, EmailNotValidError
-from setup import app, db, User, login_manager  # Import necessary objects
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-import jwt # imports JWT module
-import datetime # To set the expiration time for the token
+from setup import app, db, User  # Removed Flask-Login imports
+import jwt
+import datetime
+from functools import wraps
 
 SECRET_KEY = "ROOMIESPROJECTRSSN"
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))  # Retrieves user by ID
+def jwt_required(fn):
+    """Custom decorator to check for a valid JWT token."""
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        auth_header = request.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return jsonify({"error": "Unauthorized - No Token Provided"}), 401
+        
+        token = auth_header.split(" ")[1]
+        try:
+            decoded_token = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            request.user_id = decoded_token["id"]
+        except jwt.ExpiredSignatureError:
+            return jsonify({"error": "Token expired. Please log in again."}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({"error": "Invalid token. Please log in again."}), 401
+        
+        return fn(*args, **kwargs)
+    return wrapper
 
-# Route to receive data from React and insert into DB
 @app.route('/signup', methods=['POST'])
 def add_user():
     try:
-        #print("Incoming request received")  # Debugging
         data = request.get_json()
-        print("Received Data:", data)  # This will show if JSON is valid
-
-        existing_user = User.query.filter_by(username = data['username']).first()
+        existing_user = User.query.filter_by(username=data['username']).first()
         if existing_user:
-            print("username repeat")
-            raise Exception("Sorry, this username is already in use")
+            return jsonify({"error": "Username already in use"}), 400
 
-        try:
-            validate_email(data['email'])
-        except EmailNotValidError as e:
-            return jsonify({"error": f"Invalid email: {str(e)}"}), 400
-        
-        existing_email = User.query.filter_by(email = data['email']).first()
+        validate_email(data['email'])
+        existing_email = User.query.filter_by(email=data['email']).first()
         if existing_email:
-            print("email repeat")
-            raise Exception("Sorry, this email is already in use")
+            return jsonify({"error": "Email already in use"}), 400
 
-        #new_user = User(username=data['username'], password=data['password'], fname=data['fname'], lname=data['lname'], pronouns=data['pronouns'], gender=data['gender'], age=data['age'], uni=data['uni'], abt_me=data['abt_me'], ig=data['ig'], disc=data['disc'], email=data['email'])
         new_user = User(username=data['username'], password=data['password'], email=data['email'])
         db.session.add(new_user)
-        
         db.session.commit()
 
-        print("inserted into db")
         token_payload = {
             "id": new_user.id,
             "username": new_user.username,
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=12) # Makes the token expire in 12 hours
+            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=12)
         }
-        print("token payload")
         token = jwt.encode(token_payload, SECRET_KEY, algorithm="HS256")
-        print("token made")
-        return jsonify({
-            "message": "User logged in successfully!",
-            "token": token,
-            "user": {
-                "id": new_user.id,
-                "username": new_user.username,
-                "email": new_user.email
-            }
-        }), 200 # This token gets returned to frontend
+        return jsonify({"message": "User signed up successfully!", "token": token}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route('/login', methods=['POST'])
 def login():
     try:
-        #print("Incoming request received")  # Debugging
         data = request.get_json()
-        #print("Received Data:", data)  # This will show if JSON is valid
+        existing_user = User.query.filter_by(username=data['user']).first()
+        if not existing_user:
+            existing_user = User.query.filter_by(email=data['user']).first()
+            if not existing_user:
+                return jsonify({"error": "Account not found"}), 404
 
-        if data['user'].find('@') == -1:    # username
-            existing_user = User.query.filter_by(username = data['user']).first()
-            if not existing_user:
-                raise Exception("Sorry, this username isn't attached to an account")
-        else:   # email
-            existing_user = User.query.filter_by(email = data['user']).first()
-            if not existing_user:
-                raise Exception("Sorry, this email isn't attached to an account")
-        
         if existing_user.password == data['password']:
-            login_user(existing_user)
-
             token_payload = {
                 "id": existing_user.id,
                 "username": existing_user.username,
-                "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=12) # Makes the token expire in 12 hours
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=12)
             }
             token = jwt.encode(token_payload, SECRET_KEY, algorithm="HS256")
-
-            return jsonify({
-                "message": "User logged in successfully!",
-                "token": token,
-                "user": {
-                    "id": existing_user.id,
-                    "username": existing_user.username,
-                    "email": existing_user.email
-                }
-            }), 200 # This token gets returned to frontend
+            return jsonify({"message": "User logged in successfully!", "token": token}), 200
         else:
-            raise Exception("Incorrect Password")
-            
+            return jsonify({"error": "Incorrect password"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 @app.route('/logout', methods=['POST'])
-@login_required
 def logout():
-    logout_user()  # Removes user from session
     return jsonify({"message": "User logged out successfully!"}), 200
 
 @app.route('/current_user', methods=['GET'])
-@login_required  # Ensures only logged-in users can access this
+@jwt_required
 def get_current_user():
-    print("Current user", current_user)
-    response = jsonify({
-        "id": current_user.id,
-        "username": current_user.username,
-        "password": current_user.password,
-        "fname": current_user.fname,
-        "lname": current_user.lname,
-        "pronouns": current_user.pronouns,
-        "gender": current_user.gender,
-        "age": current_user.age,
-        "uni": current_user.uni,
-        "abt_me": current_user.abt_me,
-        "ig": current_user.ig,
-        "disc": current_user.disc,
-        "email": current_user.email
-    })
-    return response, 200
-
-@app.route('/inputted_user', methods=['GET'])
-def get_inputted_user():
-    data = request.get_json()
-    inputted_user = User.query.filter_by(username = data['id']).first()
-
+    user = User.query.get(request.user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
     return jsonify({
-        "id": inputted_user.id,
-        "username": inputted_user.username,
-        "password": inputted_user.password,
-        "fname": inputted_user.fname,
-        "lname": inputted_user.lname,
-        "pronouns": inputted_user.pronouns,
-        "gender": inputted_user.gender,
-        "age": inputted_user.age,
-        "uni": inputted_user.uni,
-        "abt_me": inputted_user.abt_me,
-        "ig": inputted_user.ig,
-        "disc": inputted_user.disc,
-        "email": inputted_user.email
+        "id": user.id,
+        "username": user.username,
+        "password": user.password,
+        "fname": user.fname,
+        "lname": user.lname,
+        "pronouns": user.pronouns,
+        "gender": user.gender,
+        "age": user.age,
+        "uni": user.uni,
+        "abt_me": user.abt_me,
+        "ig": user.ig,
+        "disc": user.disc,
+        "email": user.email
     }), 200
 
 if __name__ == '__main__':
